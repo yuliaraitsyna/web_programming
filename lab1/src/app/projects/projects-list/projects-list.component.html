@@ -1,0 +1,14 @@
+<div class="list-container">
+    <ul class="list-group list-group-container">
+        <li *ngFor="let project of projects" class="list-group-item">
+            <div class="project-item" (click)="onSelect(project)">
+                <h3>{{project.name}}</h3>
+            </div>
+            <button class="btn btn-primary m-1" (click)="onEdit(project.id)">Edit</button>
+            <button class="btn btn-danger m-1" (click)="onDelete(project.id)">Delete</button>
+        </li>
+    </ul>
+    <div class="details">
+        <app-project-details [project]="selectedProject"></app-project-details>
+    </div>
+</div>
