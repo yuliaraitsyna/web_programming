@@ -1,22 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ProjectsCenterComponent } from './projects/projects-center/projects-center.component';
-import { ProjectsListComponent } from './projects/projects-list/projects-list.component';
-import { ProjectsDetailsComponent } from './projects/projects-details/projects-details.component';
+import { ProjectsFormComponent } from './projects/projects-form/projects-form.component';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: ProjectsCenterComponent,
-    children: [{
-      path: '',
-      component: ProjectsListComponent,
-      children: [{
-        path: ':id',
-        component: ProjectsDetailsComponent
-      }]
-    }]
-  }
+  { path: 'projects', loadChildren: () => import('./projects/projects.module').then(m => m.ProjectsModule) },
+  { path: 'add', component: ProjectsFormComponent }, 
+  { path: 'edit/:id', component: ProjectsFormComponent }, 
+  { path: '', redirectTo: '/projects', pathMatch: 'full' },
+  { path: '**', redirectTo: '/projects' } 
 ];
 
 @NgModule({

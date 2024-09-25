@@ -1,0 +1,41 @@
+<form #projectForm="ngForm" (ngSubmit)="onSubmit(projectForm)" class="container container-md mt-5" style="max-width: 600px;">
+    <div class="form-group row mb-3">
+      <label for="name" class="col-sm-3 col-form-label">Name</label>
+      <div class="col-sm-9">
+        <input type="text" class="form-control" placeholder="Enter the product name" required [(ngModel)]="model.name" name="name" #name="ngModel"/>
+        <div *ngIf="name.errors?.['required']" style="color: red">Name is required.</div>
+      </div>
+    </div>
+  
+    <div class="form-group row mb-3">
+      <label for="description" class="col-sm-3 col-form-label">Description</label>
+      <div class="col-sm-9">
+        <textarea id="details" class="form-control" rows="4" placeholder="Enter the product details" required [(ngModel)]="model.description" name="description" #description="ngModel"></textarea>
+        <div *ngIf="description.errors?.['required']" style="color: red">Description is required.</div>
+      </div>
+    </div>
+  
+    <div class="form-group row mb-3">
+      <label for="price" class="col-sm-3 col-form-label">Price</label>
+      <div class="col-sm-9">
+        <input type="number" class="form-control" placeholder="Enter the price" required min="0" [(ngModel)]="model.price" name="price" #price="ngModel"/>
+        <div *ngIf="price.errors?.['required']" style="color: red">Price is required.</div>
+        <div *ngIf="price.errors?.['min']" style="color: red">Price is invalid.</div>
+      </div>
+    </div>
+  
+    <div class="form-group row mb-3">
+      <label for="customer" class="col-sm-3 col-form-label">Customer</label>
+      <div class="col-sm-9">
+        <input type="text" class="form-control" placeholder="Enter the customer name" required [(ngModel)]="model.customer" name="customer" #customer="ngModel"/>
+        <div *ngIf="customer.errors?.['required']" style="color: red">Customer is required.</div>
+      </div>
+    </div>
+  
+    <div class="form-group row">
+      <div class="col-sm-9 offset-sm-3">
+        <button type="submit" class="btn btn-primary" [disabled]="projectForm.invalid">Submit</button>
+      </div>
+    </div>
+</form>
+  
