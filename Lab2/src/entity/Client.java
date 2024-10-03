@@ -1,18 +1,26 @@
 package entity;
 
 public class Client {
-    private String fullName;
+    private String name;
+    private String surname;
 
-    public Client(String fullName) {
-        this.fullName = fullName;
+    // Constructor
+    public Client(String name, String surname) {
+        this.name = name;
+        this.surname = surname;
     }
 
-    public String getFullName() {
-        return fullName;
+    // Getters
+    public String getName() {
+        return name;
+    }
+
+    public String getSurname() {
+        return surname;
     }
 
     @Override
     public String toString() {
-        return fullName;
+        return name + " " + surname;
     }
 }

@@ -9,8 +9,8 @@ import java.util.Date;
 
 public class Factory extends BaseFactory {
     @Override
-    public Client createClient(String fullName) {
-        return new Client(fullName);
+    public Client createClient(String name, String surname) {
+        return new Client(name, surname);
     }
 
     @Override

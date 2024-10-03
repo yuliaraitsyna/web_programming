@@ -11,7 +11,7 @@ public class TechnicalTask {
     public TechnicalTask(String description, Client client) {
         this.description = description;
         this.requiredStaff = new HashMap<>();
-        this.client = new Client(client.getFullName());
+        this.client = new Client(client.getName(), client.getSurname());
     }
 
     public void addRequiredStaff(String qualification, int quantity) {

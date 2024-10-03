@@ -1,5 +1,6 @@
 package entity;
 
+import javax.management.InvalidAttributeValueException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -60,5 +61,9 @@ public class Project {
                 ", cost=" + cost +
                 ", assignedStaff=\n" + staffInfo +
                 '}';
+    }
+
+    public void setCost(double cost) {
+        this.cost = cost;
     }
 }
