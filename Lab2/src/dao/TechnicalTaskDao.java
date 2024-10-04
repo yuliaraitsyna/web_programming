@@ -2,27 +2,35 @@ package dao;
 
 import entity.Client;
 import entity.TechnicalTask;
+import factory.BaseFactory;
+import factory.Factory;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TechnicalTaskDao {
-    private static final String INSERT_TASK_SQL = "INSERT INTO technical_tasks (description, client_name, client_surname) VALUES (?, ?, ?)";
-    private static final String SELECT_TASK_BY_ID = "SELECT * FROM technical_tasks WHERE id = ?";
-    private static final String SELECT_ALL_TASKS = "SELECT * FROM technical_tasks";
+    private static final String INSERT_TASK_SQL = "INSERT INTO TechnicalTask (description, client_id) VALUES (?, ?)";
+    private static final String SELECT_TASK_BY_ID = "SELECT tt.description, c.name, c.surname " +
+            "FROM TechnicalTask tt " +
+            "JOIN Client c ON tt.client_id = c.id " +
+            "WHERE tt.id = ?";
+    private static final String SELECT_ALL_TASKS = "SELECT tt.description, c.name, c.surname " +
+            "FROM TechnicalTask tt " +
+            "JOIN Client c ON tt.client_id = c.id";
 
     private Connection connection;
+    private BaseFactory factory;
 
     public TechnicalTaskDao(Connection connection) {
         this.connection = connection;
+        this.factory = new Factory();
     }
 
-    public void addTechnicalTask(TechnicalTask task) throws SQLException {
+    public void addTechnicalTask(TechnicalTask task, int clientId) throws SQLException {
         try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_TASK_SQL)) {
             preparedStatement.setString(1, task.getDescription());
-            preparedStatement.setString(2, task.getClient().getName());
-            preparedStatement.setString(3, task.getClient().getSurname());
+            preparedStatement.setInt(2, clientId);
             preparedStatement.executeUpdate();
         }
     }
@@ -34,10 +42,10 @@ public class TechnicalTaskDao {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 String description = resultSet.getString("description");
-                String name = resultSet.getString("client_name");
-                String surname = resultSet.getString("client_surname");
-                Client client = new Client(name, surname);
-                task = new TechnicalTask(description, client);
+                String name = resultSet.getString("name");
+                String surname = resultSet.getString("surname");
+                Client client = factory.createClient(name, surname);
+                task = factory.createTechnicalTask(description, client);
             }
         }
         return task;
@@ -49,10 +57,10 @@ public class TechnicalTaskDao {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 String description = resultSet.getString("description");
-                String name = resultSet.getString("client_name");
-                String surname = resultSet.getString("client_surname");
-                Client client = new Client(name, surname);
-                tasks.add(new TechnicalTask(description, client));
+                String name = resultSet.getString("name");
+                String surname = resultSet.getString("surname");
+                Client client = factory.createClient(name, surname);
+                tasks.add(factory.createTechnicalTask(description, client));
             }
         }
         return tasks;

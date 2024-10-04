@@ -1,20 +1,24 @@
 package dao;
 
 import entity.Client;
+import factory.BaseFactory;
+import factory.Factory;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ClientDao {
-    private static final String INSERT_CLIENT_SQL = "INSERT INTO clients (name, surname) VALUES (?, ?)";
-    private static final String SELECT_CLIENT_BY_ID = "SELECT * FROM clients WHERE id = ?";
-    private static final String SELECT_ALL_CLIENTS = "SELECT * FROM clients";
+    private static final String INSERT_CLIENT_SQL = "INSERT INTO Client (name, surname) VALUES (?, ?)";
+    private static final String SELECT_CLIENT_BY_ID = "SELECT * FROM Client WHERE id = ?";
+    private static final String SELECT_ALL_CLIENTS = "SELECT * FROM Client";
 
     private Connection connection;
+    private BaseFactory factory;
 
     public ClientDao(Connection connection) {
         this.connection = connection;
+        this.factory = new Factory();
     }
 
     public void addClient(Client client) throws SQLException {
@@ -33,7 +37,7 @@ public class ClientDao {
             if (resultSet.next()) {
                 String name = resultSet.getString("name");
                 String surname = resultSet.getString("surname");
-                client = new Client(name, surname);
+                client = factory.createClient(name, surname);
             }
         }
         return client;
@@ -46,7 +50,7 @@ public class ClientDao {
             while (resultSet.next()) {
                 String name = resultSet.getString("name");
                 String surname = resultSet.getString("surname");
-                clients.add(new Client(name, surname));
+                clients.add(factory.createClient(name, surname));
             }
         }
         return clients;

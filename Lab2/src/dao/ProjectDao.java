@@ -1,6 +1,8 @@
 package dao;
 
 import entity.Project;
+import factory.BaseFactory;
+import factory.Factory;
 
 import javax.management.InvalidAttributeValueException;
 import java.sql.*;
@@ -8,14 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectDao {
-    private static final String INSERT_PROJECT_SQL = "INSERT INTO projects (title, date, cost) VALUES (?, ?, ?)";
-    private static final String SELECT_PROJECT_BY_ID = "SELECT * FROM projects WHERE id = ?";
-    private static final String SELECT_ALL_PROJECTS = "SELECT * FROM projects";
+    private static final String INSERT_PROJECT_SQL = "INSERT INTO Project (title, date, cost) VALUES (?, ?, ?)";
+    private static final String SELECT_PROJECT_BY_ID = "SELECT * FROM Project WHERE id = ?";
+    private static final String SELECT_ALL_PROJECTS = "SELECT * FROM Project";
 
     private Connection connection;
+    private BaseFactory factory;
 
     public ProjectDao(Connection connection) {
         this.connection = connection;
+        this.factory = new Factory();
     }
 
     public void addProject(Project project) throws SQLException {
@@ -36,7 +40,7 @@ public class ProjectDao {
                 String title = resultSet.getString("title");
                 Date date = resultSet.getDate("date");
                 double cost = resultSet.getDouble("cost");
-                project = new Project(title, date);
+                project = factory.createProject(title, date);
                 project.setCost(cost);
             }
         }
@@ -51,7 +55,7 @@ public class ProjectDao {
                 String title = resultSet.getString("title");
                 Date date = resultSet.getDate("date");
                 double cost = resultSet.getDouble("cost");
-                projects.add(new Project(title, date));
+                projects.add(factory.createProject(title, date));
             }
         }
         return projects;

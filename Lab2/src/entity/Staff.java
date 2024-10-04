@@ -7,9 +7,9 @@ public class Staff {
     private double salary;
     private boolean isBusy;
 
-    public Staff(String fullName, String qualification, double salary) {
-        this.name = fullName.split(" ")[0];
-        this.surname = fullName.split(" ")[1];
+    public Staff(String name, String surname, String qualification, double salary) {
+        this.name = name;
+        this.surname = surname;
         this.qualification = qualification;
         this.salary = salary;
         this.isBusy = false;

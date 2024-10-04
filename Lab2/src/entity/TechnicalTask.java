@@ -39,6 +39,7 @@ public class TechnicalTask {
         return "TechnicalTask{" +
                 "description='" + description + '\'' +
                 ", requiredWorkers=" + requiredStaff +
+                ", client=" + client.toString() +
                 '}';
     }
 }

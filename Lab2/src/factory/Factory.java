@@ -14,8 +14,8 @@ public class Factory extends BaseFactory {
     }
 
     @Override
-    public Staff createStaff(String fullName, String qualification, double salary) {
-        return new Staff(fullName, qualification, salary);
+    public Staff createStaff(String name, String surname, String qualification, double salary) {
+        return new Staff(name, surname, qualification, salary);
     }
 
     @Override
