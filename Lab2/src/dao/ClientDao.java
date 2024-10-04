@@ -12,6 +12,8 @@ public class ClientDao {
     private static final String INSERT_CLIENT_SQL = "INSERT INTO Client (name, surname) VALUES (?, ?)";
     private static final String SELECT_CLIENT_BY_ID = "SELECT * FROM Client WHERE id = ?";
     private static final String SELECT_ALL_CLIENTS = "SELECT * FROM Client";
+    private static final String UPDATE_CLIENT_SQL = "UPDATE Client SET name = ?, surname = ? WHERE id = ?";
+    private static final String DELETE_CLIENT_SQL = "DELETE FROM Client WHERE id = ?";
 
     private Connection connection;
     private BaseFactory factory;
@@ -25,6 +27,22 @@ public class ClientDao {
         try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_CLIENT_SQL)) {
             preparedStatement.setString(1, client.getName());
             preparedStatement.setString(2, client.getSurname());
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    public void updateClient(int id, Client client) throws SQLException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_CLIENT_SQL)) {
+            preparedStatement.setString(1, client.getName());
+            preparedStatement.setString(2, client.getSurname());
+            preparedStatement.setInt(3, id);
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    public void deleteClient(int id) throws SQLException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_CLIENT_SQL)) {
+            preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
         }
     }

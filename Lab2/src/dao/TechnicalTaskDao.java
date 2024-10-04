@@ -19,6 +19,8 @@ public class TechnicalTaskDao {
     private static final String SELECT_ALL_TASKS = "SELECT tt.id, tt.description, c.name, c.surname " +
             "FROM TechnicalTask tt " +
             "JOIN Client c ON tt.client_id = c.id";
+    private static final String UPDATE_TASK_SQL = "UPDATE TechnicalTask SET description = ?, client_id = ? WHERE id = ?";
+    private static final String DELETE_TASK_SQL = "DELETE FROM TechnicalTask WHERE id = ?";
 
     private Connection connection;
     private BaseFactory factory;
@@ -80,6 +82,21 @@ public class TechnicalTaskDao {
                 int amount = resultSet.getInt("amount");
                 task.addRequiredStaff(role, amount);
             }
+        }
+    }
+
+    public void updateTechnicalTask(int id, TechnicalTask task) throws SQLException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_TASK_SQL)) {
+            preparedStatement.setString(1, task.getDescription());
+            preparedStatement.setInt(3, id);
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    public void deleteTechnicalTask(int id) throws SQLException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_TASK_SQL)) {
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
         }
     }
 }

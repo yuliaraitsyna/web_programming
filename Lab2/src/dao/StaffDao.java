@@ -12,6 +12,8 @@ public class StaffDao {
     private static final String INSERT_STAFF_SQL = "INSERT INTO staff (name, surname, qualification, salary) VALUES (?, ?, ?, ?)";
     private static final String SELECT_STAFF_BY_ID = "SELECT * FROM staff WHERE id = ?";
     private static final String SELECT_ALL_STAFF = "SELECT * FROM staff";
+    private static final String UPDATE_STAFF_SQL = "UPDATE staff SET name = ?, surname = ?, qualification = ?, salary = ? WHERE id = ?";
+    private static final String DELETE_STAFF_SQL = "DELETE FROM staff WHERE id = ?";
 
     private Connection connection;
     private BaseFactory factory;
@@ -64,5 +66,23 @@ public class StaffDao {
             }
         }
         return staffList;
+    }
+
+    public void updateStaff(int id, Staff staff) throws SQLException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STAFF_SQL)) {
+            preparedStatement.setString(1, staff.getName());
+            preparedStatement.setString(2, staff.getSurname());
+            preparedStatement.setString(3, staff.getQualification());
+            preparedStatement.setDouble(4, staff.getSalary());
+            preparedStatement.setInt(5, id);
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    public void deleteStaff(int id) throws SQLException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STAFF_SQL)) {
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+        }
     }
 }

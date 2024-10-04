@@ -13,6 +13,8 @@ public class ProjectDao {
     private static final String SELECT_PROJECT_BY_ID = "SELECT * FROM Project WHERE id = ?";
     private static final String SELECT_ALL_PROJECTS = "SELECT * FROM Project";
     private static final String UPDATE_PROJECT_TASK_SQL = "UPDATE Project SET tech_task_id = ? WHERE id = ?";
+    private static final String UPDATE_PROJECT_SQL = "UPDATE Project SET title = ?, date = ?, cost = ?, tech_task_id = ? WHERE id = ?";
+    private static final String DELETE_PROJECT_SQL = "DELETE FROM Project WHERE id = ?";
 
     private Connection connection;
     private BaseFactory factory;
@@ -34,6 +36,15 @@ public class ProjectDao {
         }
     }
 
+    public void updateProject(Project project) throws SQLException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PROJECT_SQL)) {
+            preparedStatement.setString(1, project.getTitle());
+            preparedStatement.setDate(2, new java.sql.Date(project.getDate().getTime()));
+            preparedStatement.setDouble(3, project.getCost());
+            preparedStatement.executeUpdate();
+        }
+    }
+
     public Project getProjectById(int id) throws SQLException {
         Project project = null;
         try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_PROJECT_BY_ID)) {
@@ -43,13 +54,12 @@ public class ProjectDao {
                 String title = resultSet.getString("title");
                 Date date = resultSet.getDate("date");
                 double cost = resultSet.getDouble("cost");
-                Integer techTaskId = resultSet.getInt("tech_task_id"); // Получаем техническое задание
+                Integer techTaskId = resultSet.getInt("tech_task_id");
 
                 project = factory.createProject(title, date);
                 project.setCost(cost);
 
                 if (techTaskId != null && techTaskId > 0) {
-                    // Используем TechnicalTaskDao для получения задания
                     project.setAssignedTask(technicalTaskDao.getTechnicalTaskById(techTaskId));
                 }
             }
@@ -70,7 +80,6 @@ public class ProjectDao {
                 project.setCost(cost);
 
                 if (techTaskId != null && techTaskId > 0) {
-                    // Используем TechnicalTaskDao для получения задания
                     project.setAssignedTask(technicalTaskDao.getTechnicalTaskById(techTaskId));
                 }
 
@@ -84,6 +93,13 @@ public class ProjectDao {
         try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PROJECT_TASK_SQL)) {
             preparedStatement.setInt(1, taskId);
             preparedStatement.setInt(2, projectId);
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    public void deleteProject(int id) throws SQLException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_PROJECT_SQL)) {
+            preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
         }
     }
