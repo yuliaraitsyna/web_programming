@@ -15,7 +15,8 @@ public class TechnicalTaskDao {
             "FROM TechnicalTask tt " +
             "JOIN Client c ON tt.client_id = c.id " +
             "WHERE tt.id = ?";
-    private static final String SELECT_ALL_TASKS = "SELECT tt.description, c.name, c.surname " +
+    private static final String SELECT_REQUIRED_STAFF_BY_TASK_ID = "SELECT role, amount FROM RequiredStaff WHERE tech_task_id = ?";
+    private static final String SELECT_ALL_TASKS = "SELECT tt.id, tt.description, c.name, c.surname " +
             "FROM TechnicalTask tt " +
             "JOIN Client c ON tt.client_id = c.id";
 
@@ -46,6 +47,7 @@ public class TechnicalTaskDao {
                 String surname = resultSet.getString("surname");
                 Client client = factory.createClient(name, surname);
                 task = factory.createTechnicalTask(description, client);
+                loadRequiredStaff(task, id);
             }
         }
         return task;
@@ -56,13 +58,28 @@ public class TechnicalTaskDao {
         try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_TASKS)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
+                int id = resultSet.getInt("id");
                 String description = resultSet.getString("description");
                 String name = resultSet.getString("name");
                 String surname = resultSet.getString("surname");
                 Client client = factory.createClient(name, surname);
-                tasks.add(factory.createTechnicalTask(description, client));
+                TechnicalTask task = factory.createTechnicalTask(description, client);
+                loadRequiredStaff(task, id);
+                tasks.add(task);
             }
         }
         return tasks;
+    }
+
+    private void loadRequiredStaff(TechnicalTask task, int techTaskId) throws SQLException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_REQUIRED_STAFF_BY_TASK_ID)) {
+            preparedStatement.setInt(1, techTaskId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                String role = resultSet.getString("role");
+                int amount = resultSet.getInt("amount");
+                task.addRequiredStaff(role, amount);
+            }
+        }
     }
 }

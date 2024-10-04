@@ -7,9 +7,10 @@ import java.util.List;
 
 public class Project {
     private final String title;
-    Date date;
+    private Date date;
     private final List<Staff> assignedStaff;
     private double cost;
+    private TechnicalTask assignedTask;
 
     public Project(String title, Date date) {
         this.title = title;
@@ -29,6 +30,10 @@ public class Project {
             s.setBusy(false);
             cost -= s.getSalary();
         }
+    }
+
+    public TechnicalTask getAssignedTask() {
+        return assignedTask;
     }
 
     public double getCost() {
@@ -51,19 +56,35 @@ public class Project {
     @Override
     public String toString() {
         StringBuilder staffInfo = new StringBuilder();
+
+        // Добавляем заголовок таблицы для сотрудников
+        staffInfo.append(String.format("%-20s %-20s %-10s\n", "Name", "Role", "Salary"));
+        staffInfo.append("----------------------------------------------------------\n");
+
+        // Заполняем таблицу данными о сотрудниках
         for (Staff s : assignedStaff) {
-            staffInfo.append(s.toString()).append("\n");
+            staffInfo.append(String.format("%-20s %-20s %-10.2f\n", s.getName(), s.getQualification(), s.getSalary()));
         }
 
-        return "Project{" +
-                "title='" + title + '\'' +
-                ", date=" + date +
-                ", cost=" + cost +
-                ", assignedStaff=\n" + staffInfo +
-                '}';
+        // Формируем строку с результатом
+        return String.format(
+                "Project Details:\n" +
+                        "----------------------------------------------------------\n" +
+                        "Title: %-30s\n" +
+                        "Date: %-30s\n" +
+                        "Cost: %-30.2f\n" +
+                        "Assigned Staff:\n%s\n" +
+                        "Technical Task:\n%s\n",
+                title, date, cost, staffInfo.toString(), assignedTask != null ? assignedTask.toString() : "No technical task assigned"
+        );
     }
+
 
     public void setCost(double cost) {
         this.cost = cost;
+    }
+
+    public void setAssignedTask(TechnicalTask technicalTask) {
+        assignedTask = technicalTask;
     }
 }

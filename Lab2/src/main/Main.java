@@ -10,6 +10,7 @@ import entity.model.SortAction;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
@@ -37,26 +38,25 @@ public class Main {
             List<Project> projects = projectDao.getAllProjects();
             System.out.println("Projects:");
             for (Project project : projects) {
+                admin.assignStaffToProject(project.getAssignedTask(), project, (ArrayList<Staff>) staffList);
                 System.out.println(project);
             }
 
-            List<TechnicalTask> tasks = technicalTaskDao.getAllTechnicalTasks();
-            System.out.println("Technical Tasks:");
-            for (TechnicalTask task : tasks) {
-                System.out.println(task);
-            }
-
-            System.out.println("Sort projects by cost: ");
+            System.out.println("*************Sort projects by cost: *************");
             admin.sort(projects, SortAction.COST);
             System.out.println(projects);
 
-            System.out.println("Sort projects by title: ");
+            System.out.println("*************Sort projects by title: *************");
             admin.sort(projects, SortAction.TITLE);
             System.out.println(projects);
 
-            System.out.println("Sort projects by date: ");
+            System.out.println("*************Sort projects by date: *************");
             admin.sort(projects, SortAction.DATE);
             System.out.println(projects);
+
+            String searchQuery = "ABC";
+            System.out.println("*************Search for project: " + searchQuery);
+            System.out.println(admin.searchByTitle(projects, searchQuery));
 
         } catch (SQLException | IOException e) {
             e.printStackTrace();
