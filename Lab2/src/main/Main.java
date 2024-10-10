@@ -1,65 +1,62 @@
 package main;
 
-import dao.JdbcConnector;
+import controller.Controller;
 import entity.*;
 import entity.model.SortAction;
 import factory.BaseFactory;
 import factory.Factory;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        try (Connection connection = JdbcConnector.getConnection()) {
-            Admin admin = new Admin(connection);
+        try (Controller controller = new Controller()) {
+            Admin admin = new Admin();
             BaseFactory factory = new Factory();
 
-            List<Client> clients = admin.getAllClients();
+            List<Client> clients = controller.getAllClients();
             System.out.println("Clients:");
             for (Client client : clients) {
                 System.out.println(client);
             }
 
-            List<Staff> staffList = admin.getAllStaff();
+            List<Staff> staffList = controller.getAllStaff();
             System.out.println("Staff:");
             for (Staff staff : staffList) {
                 System.out.println(staff);
             }
 
-            List<Project> projects = admin.getAllProjects();
+            List<Project> projects = controller.getAllProjects();
             System.out.println("Projects:");
             for (Project project : projects) {
                 admin.assignStaffToProject(project.getAssignedTask(), project, (ArrayList<Staff>) staffList);
                 System.out.println(project);
             }
 
-            System.out.println("Clients before updating: ");
-            System.out.println(admin.getAllClients());
-
-            System.out.println("Clients before updating: ");
+            System.out.println("Clients before updating:");
             Client client1 = factory.createClient("Ivan", "Stepanov");
-            admin.updateClient(4, client1);
-            System.out.println(admin.getAllClients());
+            controller.updateClient(4, client1);
+            System.out.println(controller.getAllClients());
 
             Client client2 = factory.createClient("John", "Doe");
-            admin.updateClient(4, client2);
+            controller.updateClient(4, client2);
+            System.out.println("Clients after updating:");
+            System.out.println(controller.getAllClients());
 
-            System.out.println("TechincalTasks before adding: ");
-            System.out.println(admin.getAllTechnicalTasks());
+            System.out.println("TechnicalTasks before adding:");
+            System.out.println(controller.getAllTechnicalTasks());
             TechnicalTask task = factory.createTechnicalTask("New task", client1);
-            admin.addTechnicalTask(task, 4);
+            controller.addTechnicalTask(task, 4);
 
-            System.out.println("TechnicalTasks after adding a task: ");
-            System.out.println(admin.getAllTechnicalTasks());
+            System.out.println("TechnicalTasks after adding a task:");
+            System.out.println(controller.getAllTechnicalTasks());
 
-            admin.deleteTechnicalTask(4);
-            System.out.println("TechnicalTasks after deleting new one: ");
-            System.out.println(admin.getAllTechnicalTasks());
-
+            controller.deleteTechnicalTask(4);
+            System.out.println("TechnicalTasks after deleting new one:");
+            System.out.println(controller.getAllTechnicalTasks());
 
             System.out.println("*************Sort projects by cost: *************");
             admin.sort(projects, SortAction.COST);

@@ -4,22 +4,22 @@ import entity.Client;
 import factory.BaseFactory;
 import factory.Factory;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClientDao {
+public class ClientDao extends DAO{
     private static final String INSERT_CLIENT_SQL = "INSERT INTO Client (name, surname) VALUES (?, ?)";
     private static final String SELECT_CLIENT_BY_ID = "SELECT * FROM Client WHERE id = ?";
     private static final String SELECT_ALL_CLIENTS = "SELECT * FROM Client";
     private static final String UPDATE_CLIENT_SQL = "UPDATE Client SET name = ?, surname = ? WHERE id = ?";
     private static final String DELETE_CLIENT_SQL = "DELETE FROM Client WHERE id = ?";
 
-    private Connection connection;
     private BaseFactory factory;
 
-    public ClientDao(Connection connection) {
-        this.connection = connection;
+    public ClientDao() throws SQLException, IOException {
+        super();
         this.factory = new Factory();
     }
 

@@ -4,22 +4,22 @@ import entity.Staff;
 import factory.BaseFactory;
 import factory.Factory;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StaffDao {
+public class StaffDao extends DAO {
     private static final String INSERT_STAFF_SQL = "INSERT INTO staff (name, surname, qualification, salary) VALUES (?, ?, ?, ?)";
     private static final String SELECT_STAFF_BY_ID = "SELECT * FROM staff WHERE id = ?";
     private static final String SELECT_ALL_STAFF = "SELECT * FROM staff";
     private static final String UPDATE_STAFF_SQL = "UPDATE staff SET name = ?, surname = ?, qualification = ?, salary = ? WHERE id = ?";
     private static final String DELETE_STAFF_SQL = "DELETE FROM staff WHERE id = ?";
 
-    private Connection connection;
     private BaseFactory factory;
 
-    public StaffDao(Connection connection) {
-        this.connection = connection;
+    public StaffDao() throws SQLException, IOException {
+        super();
         this.factory = new Factory();
     }
 

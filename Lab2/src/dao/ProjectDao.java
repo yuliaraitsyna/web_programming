@@ -4,26 +4,26 @@ import entity.Project;
 import factory.BaseFactory;
 import factory.Factory;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjectDao {
+public class ProjectDao extends DAO {
     private static final String INSERT_PROJECT_SQL = "INSERT INTO Project (title, date, cost) VALUES (?, ?, ?)";
     private static final String SELECT_PROJECT_BY_ID = "SELECT * FROM Project WHERE id = ?";
     private static final String SELECT_ALL_PROJECTS = "SELECT * FROM Project";
     private static final String UPDATE_PROJECT_TASK_SQL = "UPDATE Project SET tech_task_id = ? WHERE id = ?";
     private static final String UPDATE_PROJECT_SQL = "UPDATE Project SET title = ?, date = ?, cost = ?, tech_task_id = ? WHERE id = ?";
     private static final String DELETE_PROJECT_SQL = "DELETE FROM Project WHERE id = ?";
-
-    private Connection connection;
+    ;
     private BaseFactory factory;
     private TechnicalTaskDao technicalTaskDao;
 
-    public ProjectDao(Connection connection) {
-        this.connection = connection;
+    public ProjectDao() throws SQLException, IOException {
+        super();
         this.factory = new Factory();
-        this.technicalTaskDao = new TechnicalTaskDao(connection); // Используем TechnicalTaskDao
+        this.technicalTaskDao = new TechnicalTaskDao(); // Используем TechnicalTaskDao
     }
 
     public void addProject(Project project) throws SQLException {

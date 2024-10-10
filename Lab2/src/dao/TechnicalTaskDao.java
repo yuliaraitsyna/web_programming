@@ -5,11 +5,12 @@ import entity.TechnicalTask;
 import factory.BaseFactory;
 import factory.Factory;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TechnicalTaskDao {
+public class TechnicalTaskDao extends DAO {
     private static final String INSERT_TASK_SQL = "INSERT INTO TechnicalTask (description, client_id) VALUES (?, ?)";
     private static final String SELECT_TASK_BY_ID = "SELECT tt.description, c.name, c.surname " +
             "FROM TechnicalTask tt " +
@@ -22,11 +23,10 @@ public class TechnicalTaskDao {
     private static final String UPDATE_TASK_SQL = "UPDATE TechnicalTask SET description = ?, client_id = ? WHERE id = ?";
     private static final String DELETE_TASK_SQL = "DELETE FROM TechnicalTask WHERE id = ?";
 
-    private Connection connection;
     private BaseFactory factory;
 
-    public TechnicalTaskDao(Connection connection) {
-        this.connection = connection;
+    public TechnicalTaskDao() throws SQLException, IOException {
+        super();
         this.factory = new Factory();
     }
 
