@@ -57,16 +57,13 @@ public class Project {
     public String toString() {
         StringBuilder staffInfo = new StringBuilder();
 
-        // Добавляем заголовок таблицы для сотрудников
         staffInfo.append(String.format("%-20s %-20s %-10s\n", "Name", "Role", "Salary"));
         staffInfo.append("----------------------------------------------------------\n");
 
-        // Заполняем таблицу данными о сотрудниках
         for (Staff s : assignedStaff) {
             staffInfo.append(String.format("%-20s %-20s %-10.2f\n", s.getName(), s.getQualification(), s.getSalary()));
         }
 
-        // Формируем строку с результатом
         return String.format(
                 "Project Details:\n" +
                         "----------------------------------------------------------\n" +

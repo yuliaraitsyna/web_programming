@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 public class ClientDao extends DAO{
     private static final String INSERT_CLIENT_SQL = "INSERT INTO Client (name, surname) VALUES (?, ?)";
@@ -28,7 +29,7 @@ public class ClientDao extends DAO{
         try {
             connection = connectionPool.getConnection();
         } catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_CLIENT_SQL)) {
             preparedStatement.setString(1, client.getName());
@@ -36,7 +37,7 @@ public class ClientDao extends DAO{
             preparedStatement.executeUpdate();
         }
         catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -47,7 +48,7 @@ public class ClientDao extends DAO{
         try {
             connection = connectionPool.getConnection();
         } catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_CLIENT_SQL)) {
             preparedStatement.setString(1, client.getName());
@@ -56,7 +57,7 @@ public class ClientDao extends DAO{
             preparedStatement.executeUpdate();
         }
         catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -67,14 +68,14 @@ public class ClientDao extends DAO{
         try {
             connection = connectionPool.getConnection();
         } catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_CLIENT_SQL)) {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
         }
         catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -86,7 +87,7 @@ public class ClientDao extends DAO{
         try {
             connection = connectionPool.getConnection();
         } catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_CLIENT_BY_ID)) {
             preparedStatement.setInt(1, id);
@@ -98,7 +99,7 @@ public class ClientDao extends DAO{
             }
         }
         catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -111,7 +112,7 @@ public class ClientDao extends DAO{
         try {
             connection = connectionPool.getConnection();
         } catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_CLIENTS)) {
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -122,7 +123,7 @@ public class ClientDao extends DAO{
             }
         }
         catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         } finally {
             connectionPool.releaseConnection(connection);
         }

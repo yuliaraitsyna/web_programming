@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 public class StaffDao extends DAO {
     private static final String INSERT_STAFF_SQL = "INSERT INTO staff (name, surname, qualification, salary) VALUES (?, ?, ?, ?)";
@@ -28,7 +29,7 @@ public class StaffDao extends DAO {
         try {
             connection = connectionPool.getConnection();
         } catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_STAFF_SQL)) {
             preparedStatement.setString(1, staff.getName());
@@ -38,7 +39,7 @@ public class StaffDao extends DAO {
             preparedStatement.executeUpdate();
         }
         catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -50,7 +51,7 @@ public class StaffDao extends DAO {
         try {
             connection = connectionPool.getConnection();
         } catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_STAFF_BY_ID)) {
             preparedStatement.setInt(1, id);
@@ -60,12 +61,11 @@ public class StaffDao extends DAO {
                 String surname = resultSet.getString("surname");
                 String qualification = resultSet.getString("qualification");
                 double salary = resultSet.getDouble("salary");
-
                 staff = factory.createStaff(name, surname, qualification, salary);
             }
         }
         catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -79,7 +79,7 @@ public class StaffDao extends DAO {
         try {
             connection = connectionPool.getConnection();
         } catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_STAFF)) {
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -94,7 +94,7 @@ public class StaffDao extends DAO {
             }
         }
         catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -106,7 +106,7 @@ public class StaffDao extends DAO {
         try {
             connection = connectionPool.getConnection();
         } catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STAFF_SQL)) {
             preparedStatement.setString(1, staff.getName());
@@ -117,7 +117,7 @@ public class StaffDao extends DAO {
             preparedStatement.executeUpdate();
         }
         catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -127,14 +127,14 @@ public class StaffDao extends DAO {
         try {
             connection = connectionPool.getConnection();
         } catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STAFF_SQL)) {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
         }
         catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         } finally {
             connectionPool.releaseConnection(connection);
         }

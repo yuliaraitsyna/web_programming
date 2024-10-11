@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 public class TechnicalTaskDao extends DAO {
     private static final String INSERT_TASK_SQL = "INSERT INTO TechnicalTask (description, client_id) VALUES (?, ?)";
@@ -35,7 +36,7 @@ public class TechnicalTaskDao extends DAO {
         try {
             connection = connectionPool.getConnection();
         } catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_TASK_SQL)) {
             preparedStatement.setString(1, task.getDescription());
@@ -43,7 +44,7 @@ public class TechnicalTaskDao extends DAO {
             preparedStatement.executeUpdate();
         }
         catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -55,7 +56,7 @@ public class TechnicalTaskDao extends DAO {
         try {
             connection = connectionPool.getConnection();
         } catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_TASK_BY_ID)) {
             preparedStatement.setInt(1, id);
@@ -70,7 +71,7 @@ public class TechnicalTaskDao extends DAO {
             }
         }
         catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -83,7 +84,7 @@ public class TechnicalTaskDao extends DAO {
         try {
             connection = connectionPool.getConnection();
         } catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_TASKS)) {
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -99,7 +100,7 @@ public class TechnicalTaskDao extends DAO {
             }
         }
         catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -111,7 +112,7 @@ public class TechnicalTaskDao extends DAO {
         try {
             connection = connectionPool.getConnection();
         } catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_REQUIRED_STAFF_BY_TASK_ID)) {
             preparedStatement.setInt(1, techTaskId);
@@ -123,7 +124,7 @@ public class TechnicalTaskDao extends DAO {
             }
         }
         catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -134,7 +135,7 @@ public class TechnicalTaskDao extends DAO {
         try {
             connection = connectionPool.getConnection();
         } catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_TASK_SQL)) {
             preparedStatement.setString(1, task.getDescription());
@@ -142,7 +143,7 @@ public class TechnicalTaskDao extends DAO {
             preparedStatement.executeUpdate();
         }
         catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -153,14 +154,14 @@ public class TechnicalTaskDao extends DAO {
         try {
             connection = connectionPool.getConnection();
         } catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_TASK_SQL)) {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
         }
         catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         } finally {
             connectionPool.releaseConnection(connection);
         }

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 public class ProjectDao extends DAO {
     private static final String INSERT_PROJECT_SQL = "INSERT INTO Project (title, date, cost) VALUES (?, ?, ?)";
@@ -31,7 +32,7 @@ public class ProjectDao extends DAO {
         try {
             connection = connectionPool.getConnection();
         } catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PROJECT_SQL)) {
             preparedStatement.setString(1, project.getTitle());
@@ -41,7 +42,7 @@ public class ProjectDao extends DAO {
             preparedStatement.executeUpdate();
         }
         catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -52,7 +53,7 @@ public class ProjectDao extends DAO {
         try {
             connection = connectionPool.getConnection();
         } catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PROJECT_SQL)) {
             preparedStatement.setString(1, project.getTitle());
@@ -61,7 +62,7 @@ public class ProjectDao extends DAO {
             preparedStatement.executeUpdate();
         }
         catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -73,7 +74,7 @@ public class ProjectDao extends DAO {
         try {
             connection = connectionPool.getConnection();
         } catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_PROJECT_BY_ID)) {
             preparedStatement.setInt(1, id);
@@ -93,7 +94,7 @@ public class ProjectDao extends DAO {
             }
         }
         catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -106,7 +107,7 @@ public class ProjectDao extends DAO {
         try {
             connection = connectionPool.getConnection();
         } catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_PROJECTS)) {
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -126,7 +127,7 @@ public class ProjectDao extends DAO {
             }
         }
         catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -138,7 +139,7 @@ public class ProjectDao extends DAO {
         try {
             connection = connectionPool.getConnection();
         } catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PROJECT_TASK_SQL)) {
             preparedStatement.setInt(1, taskId);
@@ -146,7 +147,7 @@ public class ProjectDao extends DAO {
             preparedStatement.executeUpdate();
         }
         catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -157,14 +158,14 @@ public class ProjectDao extends DAO {
         try {
             connection = connectionPool.getConnection();
         } catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_PROJECT_SQL)) {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
         }
         catch (SQLException e) {
-
+            logger.log(Level.SEVERE, e.getMessage());
         } finally {
             connectionPool.releaseConnection(connection);
         }
