@@ -24,31 +24,70 @@ public class ClientDao extends DAO{
     }
 
     public void addClient(Client client) throws SQLException {
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+        } catch (SQLException e) {
+
+        }
         try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_CLIENT_SQL)) {
             preparedStatement.setString(1, client.getName());
             preparedStatement.setString(2, client.getSurname());
             preparedStatement.executeUpdate();
         }
+        catch (SQLException e) {
+
+        } finally {
+            connectionPool.releaseConnection(connection);
+        }
     }
 
     public void updateClient(int id, Client client) throws SQLException {
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+        } catch (SQLException e) {
+
+        }
         try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_CLIENT_SQL)) {
             preparedStatement.setString(1, client.getName());
             preparedStatement.setString(2, client.getSurname());
             preparedStatement.setInt(3, id);
             preparedStatement.executeUpdate();
         }
+        catch (SQLException e) {
+
+        } finally {
+            connectionPool.releaseConnection(connection);
+        }
     }
 
     public void deleteClient(int id) throws SQLException {
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+        } catch (SQLException e) {
+
+        }
         try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_CLIENT_SQL)) {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
+        }
+        catch (SQLException e) {
+
+        } finally {
+            connectionPool.releaseConnection(connection);
         }
     }
 
     public Client getClientById(int id) throws SQLException {
         Client client = null;
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+        } catch (SQLException e) {
+
+        }
         try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_CLIENT_BY_ID)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -58,11 +97,22 @@ public class ClientDao extends DAO{
                 client = factory.createClient(name, surname);
             }
         }
+        catch (SQLException e) {
+
+        } finally {
+            connectionPool.releaseConnection(connection);
+        }
         return client;
     }
 
     public List<Client> getAllClients() throws SQLException {
         List<Client> clients = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+        } catch (SQLException e) {
+
+        }
         try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_CLIENTS)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -70,6 +120,11 @@ public class ClientDao extends DAO{
                 String surname = resultSet.getString("surname");
                 clients.add(factory.createClient(name, surname));
             }
+        }
+        catch (SQLException e) {
+
+        } finally {
+            connectionPool.releaseConnection(connection);
         }
         return clients;
     }

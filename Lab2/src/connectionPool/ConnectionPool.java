@@ -1,5 +1,7 @@
 package connectionPool;
 
+import loggerManager.LoggerManager;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -11,6 +13,8 @@ import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ConnectionPool {
     private static final int INITIAL_POOL_SIZE = 10;
@@ -18,6 +22,7 @@ public class ConnectionPool {
     private static final int TIMEOUT = 30;
 
     private static final String PROPERTIES_FILE = "database.properties";
+    private static final Logger logger = LoggerManager.getErrorLogger();
 
     private final String jdbcUrl;
     private final String jdbcUser;
@@ -35,6 +40,9 @@ public class ConnectionPool {
             }
             properties.load(input);
         }
+        catch(IOException e) {
+            logger.log(Level.SEVERE, "Error loading properties file: " + e.getMessage(), e);
+        }
 
         this.jdbcUrl = properties.getProperty("db.url");
         this.jdbcUser = properties.getProperty("db.user");
@@ -51,6 +59,7 @@ public class ConnectionPool {
             return DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword);
         }
         catch(SQLException e) {
+            logger.log(Level.SEVERE, "Error creating database connections.", e.getMessage());
             throw new RuntimeException("Error creating database connections.");
         }
     }
@@ -60,15 +69,15 @@ public class ConnectionPool {
         try {
             connection = connectionPool.poll(TIMEOUT, TimeUnit.SECONDS); // Ожидание свободного соединения
             if (connection == null && usedConnections.size() < MAX_POOL_SIZE) {
-                connection = createConnection(); // Создать новое соединение, если доступно
+                connection = createConnection();
             }
             if (connection != null) {
                 usedConnections.add(connection);
             } else {
-                throw new SQLException("Превышено максимальное количество соединений в пуле");
+                throw new SQLException("Number of connections in ConnectionPool has reached maximum");
             }
         } catch (InterruptedException e) {
-            throw new SQLException("Ошибка при получении соединения из пула", e);
+            throw new SQLException("Error getting connection from pool", e);
         }
         return connection;
     }
@@ -82,18 +91,17 @@ public class ConnectionPool {
                     connectionPool.add(createConnection());
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.log(Level.SEVERE, e.getMessage());
             }
         }
     }
 
-    // Закрытие всех соединений (полное завершение работы пула)
     public void shutdown() throws SQLException {
         for (Connection connection : connectionPool) {
-            connection.close(); // Закрытие неиспользуемых соединений
+            connection.close();
         }
         for (Connection connection : usedConnections) {
-            connection.close(); // Закрытие использованных соединений
+            connection.close();
         }
     }
 }

@@ -24,6 +24,12 @@ public class StaffDao extends DAO {
     }
 
     public void addStaff(Staff staff) throws SQLException {
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+        } catch (SQLException e) {
+
+        }
         try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_STAFF_SQL)) {
             preparedStatement.setString(1, staff.getName());
             preparedStatement.setString(2, staff.getSurname());
@@ -31,10 +37,21 @@ public class StaffDao extends DAO {
             preparedStatement.setDouble(4, staff.getSalary());
             preparedStatement.executeUpdate();
         }
+        catch (SQLException e) {
+
+        } finally {
+            connectionPool.releaseConnection(connection);
+        }
     }
 
     public Staff getStaffById(int id) throws SQLException {
         Staff staff = null;
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+        } catch (SQLException e) {
+
+        }
         try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_STAFF_BY_ID)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -47,12 +64,23 @@ public class StaffDao extends DAO {
                 staff = factory.createStaff(name, surname, qualification, salary);
             }
         }
+        catch (SQLException e) {
+
+        } finally {
+            connectionPool.releaseConnection(connection);
+        }
         return staff;
     }
 
     // Get a list of all staff members
     public List<Staff> getAllStaff() throws SQLException {
         List<Staff> staffList = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+        } catch (SQLException e) {
+
+        }
         try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_STAFF)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -65,10 +93,21 @@ public class StaffDao extends DAO {
                 staffList.add(staff);
             }
         }
+        catch (SQLException e) {
+
+        } finally {
+            connectionPool.releaseConnection(connection);
+        }
         return staffList;
     }
 
     public void updateStaff(int id, Staff staff) throws SQLException {
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+        } catch (SQLException e) {
+
+        }
         try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STAFF_SQL)) {
             preparedStatement.setString(1, staff.getName());
             preparedStatement.setString(2, staff.getSurname());
@@ -77,12 +116,27 @@ public class StaffDao extends DAO {
             preparedStatement.setInt(5, id);
             preparedStatement.executeUpdate();
         }
+        catch (SQLException e) {
+
+        } finally {
+            connectionPool.releaseConnection(connection);
+        }
     }
 
-    public void deleteStaff(int id) throws SQLException {
+    public void deleteStaff(int id) throws SQLException {Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+        } catch (SQLException e) {
+
+        }
         try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STAFF_SQL)) {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
+        }
+        catch (SQLException e) {
+
+        } finally {
+            connectionPool.releaseConnection(connection);
         }
     }
 }

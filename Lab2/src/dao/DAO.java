@@ -1,41 +1,32 @@
 package dao;
 
 import connectionPool.ConnectionPool;
-
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
-public class DAO {
-    protected Connection connection = null;
-    protected Statement statement = null;
+public abstract class DAO {
     protected ConnectionPool connectionPool;
 
     public DAO() throws SQLException, IOException {
         this.connectionPool = new ConnectionPool();
-        this.connection = connectionPool.getConnection();
-        this.statement = connection.createStatement();
+    }
+
+    protected Connection getConnection() throws SQLException {
+        return connectionPool.getConnection();
+    }
+
+    protected void releaseConnection(Connection connection) {
+        connectionPool.releaseConnection(connection);
     }
 
     public void close() {
-        closeStatement();
-        releaseConnection();
-    }
-
-    private void closeStatement() {
-        if (statement != null) {
-            try {
-                statement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void releaseConnection() {
-        if (connection != null) {
-            connectionPool.releaseConnection(connection);
+        try {
+            connectionPool.shutdown();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }

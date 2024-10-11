@@ -27,6 +27,12 @@ public class ProjectDao extends DAO {
     }
 
     public void addProject(Project project) throws SQLException {
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+        } catch (SQLException e) {
+
+        }
         try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PROJECT_SQL)) {
             preparedStatement.setString(1, project.getTitle());
             preparedStatement.setDate(2, new java.sql.Date(project.getDate().getTime()));
@@ -34,19 +40,41 @@ public class ProjectDao extends DAO {
             preparedStatement.setNull(4, Types.INTEGER);
             preparedStatement.executeUpdate();
         }
+        catch (SQLException e) {
+
+        } finally {
+            connectionPool.releaseConnection(connection);
+        }
     }
 
     public void updateProject(Project project) throws SQLException {
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+        } catch (SQLException e) {
+
+        }
         try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PROJECT_SQL)) {
             preparedStatement.setString(1, project.getTitle());
             preparedStatement.setDate(2, new java.sql.Date(project.getDate().getTime()));
             preparedStatement.setDouble(3, project.getCost());
             preparedStatement.executeUpdate();
         }
+        catch (SQLException e) {
+
+        } finally {
+            connectionPool.releaseConnection(connection);
+        }
     }
 
     public Project getProjectById(int id) throws SQLException {
         Project project = null;
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+        } catch (SQLException e) {
+
+        }
         try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_PROJECT_BY_ID)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -64,11 +92,22 @@ public class ProjectDao extends DAO {
                 }
             }
         }
+        catch (SQLException e) {
+
+        } finally {
+            connectionPool.releaseConnection(connection);
+        }
         return project;
     }
 
     public List<Project> getAllProjects() throws SQLException {
         List<Project> projects = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+        } catch (SQLException e) {
+
+        }
         try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_PROJECTS)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -86,21 +125,48 @@ public class ProjectDao extends DAO {
                 projects.add(project);
             }
         }
+        catch (SQLException e) {
+
+        } finally {
+            connectionPool.releaseConnection(connection);
+        }
         return projects;
     }
 
     public void assignTaskToProject(int projectId, int taskId) throws SQLException {
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+        } catch (SQLException e) {
+
+        }
         try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PROJECT_TASK_SQL)) {
             preparedStatement.setInt(1, taskId);
             preparedStatement.setInt(2, projectId);
             preparedStatement.executeUpdate();
         }
+        catch (SQLException e) {
+
+        } finally {
+            connectionPool.releaseConnection(connection);
+        }
     }
 
     public void deleteProject(int id) throws SQLException {
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+        } catch (SQLException e) {
+
+        }
         try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_PROJECT_SQL)) {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
+        }
+        catch (SQLException e) {
+
+        } finally {
+            connectionPool.releaseConnection(connection);
         }
     }
 }

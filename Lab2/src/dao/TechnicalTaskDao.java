@@ -31,15 +31,32 @@ public class TechnicalTaskDao extends DAO {
     }
 
     public void addTechnicalTask(TechnicalTask task, int clientId) throws SQLException {
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+        } catch (SQLException e) {
+
+        }
         try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_TASK_SQL)) {
             preparedStatement.setString(1, task.getDescription());
             preparedStatement.setInt(2, clientId);
             preparedStatement.executeUpdate();
         }
+        catch (SQLException e) {
+
+        } finally {
+            connectionPool.releaseConnection(connection);
+        }
     }
 
     public TechnicalTask getTechnicalTaskById(int id) throws SQLException {
         TechnicalTask task = null;
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+        } catch (SQLException e) {
+
+        }
         try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_TASK_BY_ID)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -52,11 +69,22 @@ public class TechnicalTaskDao extends DAO {
                 loadRequiredStaff(task, id);
             }
         }
+        catch (SQLException e) {
+
+        } finally {
+            connectionPool.releaseConnection(connection);
+        }
         return task;
     }
 
     public List<TechnicalTask> getAllTechnicalTasks() throws SQLException {
         List<TechnicalTask> tasks = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+        } catch (SQLException e) {
+
+        }
         try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_TASKS)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -70,10 +98,21 @@ public class TechnicalTaskDao extends DAO {
                 tasks.add(task);
             }
         }
+        catch (SQLException e) {
+
+        } finally {
+            connectionPool.releaseConnection(connection);
+        }
         return tasks;
     }
 
     private void loadRequiredStaff(TechnicalTask task, int techTaskId) throws SQLException {
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+        } catch (SQLException e) {
+
+        }
         try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_REQUIRED_STAFF_BY_TASK_ID)) {
             preparedStatement.setInt(1, techTaskId);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -83,20 +122,47 @@ public class TechnicalTaskDao extends DAO {
                 task.addRequiredStaff(role, amount);
             }
         }
+        catch (SQLException e) {
+
+        } finally {
+            connectionPool.releaseConnection(connection);
+        }
     }
 
     public void updateTechnicalTask(int id, TechnicalTask task) throws SQLException {
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+        } catch (SQLException e) {
+
+        }
         try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_TASK_SQL)) {
             preparedStatement.setString(1, task.getDescription());
             preparedStatement.setInt(3, id);
             preparedStatement.executeUpdate();
         }
+        catch (SQLException e) {
+
+        } finally {
+            connectionPool.releaseConnection(connection);
+        }
     }
 
     public void deleteTechnicalTask(int id) throws SQLException {
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+        } catch (SQLException e) {
+
+        }
         try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_TASK_SQL)) {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
+        }
+        catch (SQLException e) {
+
+        } finally {
+            connectionPool.releaseConnection(connection);
         }
     }
 }
