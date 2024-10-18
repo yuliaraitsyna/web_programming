@@ -23,7 +23,7 @@ public class LoggerManager {
             errorLogger = Logger.getLogger("ErrorLogger");
 
             FileHandler fileHandler = new FileHandler(ERROR_LOG_FILE, false);  // Append mode
-            fileHandler.setLevel(Level.ALL);  // Log everything
+            fileHandler.setLevel(Level.SEVERE);
             fileHandler.setFormatter(new SimpleFormatter());
 
             errorLogger.addHandler(fileHandler);

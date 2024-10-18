@@ -67,7 +67,7 @@ public class ConnectionPool {
     public Connection getConnection() throws SQLException {
         Connection connection = null;
         try {
-            connection = connectionPool.poll(TIMEOUT, TimeUnit.SECONDS); // Ожидание свободного соединения
+            connection = connectionPool.poll(TIMEOUT, TimeUnit.SECONDS);
             if (connection == null && usedConnections.size() < MAX_POOL_SIZE) {
                 connection = createConnection();
             }
