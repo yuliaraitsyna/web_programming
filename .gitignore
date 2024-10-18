@@ -3,3 +3,4 @@ web_programming.iml
 .DS_Store
 out/
 target/
+src/main/java/com/example/project/resources/database.properties
