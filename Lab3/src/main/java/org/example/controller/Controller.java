@@ -8,10 +8,13 @@ import org.example.entity.Client;
 import org.example.entity.Project;
 import org.example.entity.Staff;
 import org.example.entity.TechnicalTask;
+import org.example.entity.model.SortAction;
+import org.example.strategy.Sorting;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public class Controller implements AutoCloseable {
 
@@ -43,6 +46,10 @@ public class Controller implements AutoCloseable {
         return clientDao.getAllClients();
     }
 
+    public Client getClientById(Long id) throws SQLException {
+        return clientDao.getClientById(id);
+    }
+
     public void addProject(Project project) throws SQLException {
         projectDao.addProject(project);
     }
@@ -59,6 +66,10 @@ public class Controller implements AutoCloseable {
         return projectDao.getAllProjects();
     }
 
+    public Project getProjectById(Long id) throws SQLException {
+        return projectDao.getProjectById(id);
+    }
+
     public void addTechnicalTask(TechnicalTask task) throws SQLException {
         technicalTaskDao.addTechnicalTask(task);
     }
@@ -73,6 +84,10 @@ public class Controller implements AutoCloseable {
 
     public List<TechnicalTask> getAllTechnicalTasks() throws SQLException {
         return technicalTaskDao.getAllTechnicalTasks();
+    }
+
+    public TechnicalTask getTechnicalTaskById(Long id) throws SQLException {
+        return technicalTaskDao.getTechnicalTaskById(id);
     }
 
     public void addStaff(Staff staff) throws SQLException {
@@ -101,5 +116,25 @@ public class Controller implements AutoCloseable {
         if (staffDao != null) staffDao.close();
         if (projectDao != null) projectDao.close();
         if (technicalTaskDao != null) technicalTaskDao.close();
+    }
+
+    public void assignStaff(TechnicalTask task, Project project, List<Staff> availableStaff) {
+        Map<String, Integer> requiredStaff = task.getRequiredStaff();
+        for (Map.Entry<String, Integer> entry : requiredStaff.entrySet()) {
+            String qualification = entry.getKey();
+            Integer number = entry.getValue();
+
+            for (Staff staff : availableStaff) {
+                if (!staff.isBusy() && staff.getQualification().equals(qualification) && number > 0) {
+                    project.assignStaff(staff);
+                    staff.setBusy(true);
+                    number--;
+                }
+            }
+
+            if (number > 0) {
+                System.out.println("Not enough staff with " + qualification + " qualification for task: " + task.getDescription());
+            }
+        }
     }
 }

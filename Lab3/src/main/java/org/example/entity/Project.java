@@ -42,7 +42,7 @@ public class Project {
         this.assignedStaff = new ArrayList<Staff>();
     }
 
-    protected void assignStaff(Staff s) {
+    public void assignStaff(Staff s) {
         assignedStaff.add(s);
         s.setBusy(true);
         cost += s.getSalary();
