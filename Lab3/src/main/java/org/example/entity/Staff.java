@@ -4,17 +4,37 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "Staff")
+@NamedQueries({
+        @NamedQuery(name = "Staff.findById",
+                query = "SELECT s FROM Staff s WHERE s.id = :id"),
+        @NamedQuery(name = "Staff.findAll",
+                query = "SELECT s FROM Staff s")
+})
 public class Staff {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
-    private String name;             // Field for name
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "surname")
     private String surname;
+
+    @Column(name = "qualification")
     private String qualification;
 
+    @Column(name = "salary")
     private double salary;
+
+    @Column(name = "is_busy")
     private boolean isBusy;
+
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
 
     public Staff() {
         // Required by JPA
@@ -69,5 +89,13 @@ public class Staff {
 
     public String getSurname() {
         return surname;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 }

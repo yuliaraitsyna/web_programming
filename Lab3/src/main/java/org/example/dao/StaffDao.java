@@ -2,59 +2,66 @@ package org.example.dao;
 
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
-import org.example.entity.Client;
+import org.example.entity.Staff;
 import org.example.factory.BaseFactory;
 import org.example.factory.Factory;
 
 import java.util.List;
 
-public class ClientDao extends DAO {
+public class StaffDao extends DAO {
     private BaseFactory factory;
 
-    public ClientDao() {
+    public StaffDao() {
         super();
         this.factory = new Factory();
     }
 
-    public void addClient(Client client) {
+    public void addStaff(Staff staff) {
         EntityTransaction transaction = null;
         try {
             transaction = entityManager.getTransaction();
             transaction.begin();
-            entityManager.persist(client);
+            entityManager.persist(staff);
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
             }
+            e.printStackTrace();
         }
     }
 
-    public void updateClient(Long id, Client updatedClient) {
+    public void updateStaff(Long id, Staff updatedStaff) {
         EntityTransaction transaction = null;
         try {
             transaction = entityManager.getTransaction();
             transaction.begin();
-            Client client = entityManager.find(Client.class, id);
-            if (client != null) {
-                client.setName(updatedClient.getName());
-                client.setSurname(updatedClient.getSurname());
-                entityManager.merge(client);
+            Staff staff = entityManager.find(Staff.class, id);
+            if (staff != null) {
+                staff.setName(updatedStaff.getName());
+                staff.setSurname(updatedStaff.getSurname());
+                staff.setQualification(updatedStaff.getQualification());
+                staff.setSalary(updatedStaff.getSalary());
+                staff.setBusy(updatedStaff.isBusy());
+                entityManager.merge(staff);
             }
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
             }
+            e.printStackTrace();
         }
     }
 
-    public void deleteClient(Long id) {
+    public void deleteStaff(Long id) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            Client client = entityManager.find(Client.class, id);
-            entityManager.remove(client);
+            Staff staff = entityManager.find(Staff.class, id);
+            if (staff != null) {
+                entityManager.remove(staff);
+            }
             transaction.commit();
         } catch (Exception e) {
             if (transaction.isActive()) {
@@ -64,42 +71,40 @@ public class ClientDao extends DAO {
         }
     }
 
-    public Client getClientById(Long id) {
+    public Staff getStaffById(Long id) {
         EntityTransaction transaction = null;
-        Client client = null;
+        Staff staff = null;
         try {
             transaction = entityManager.getTransaction();
             transaction.begin();
-
-            TypedQuery<Client> query = entityManager.createNamedQuery("Client.findById", Client.class);
+            TypedQuery<Staff> query = entityManager.createNamedQuery("Staff.findById", Staff.class);
             query.setParameter("id", id);
-            client = query.getSingleResult();
-
+            staff = query.getSingleResult();
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
             }
+            e.printStackTrace();
         }
-        return client;
+        return staff;
     }
 
-    public List<Client> getAllClients() {
+    public List<Staff> getAllStaff() {
         EntityTransaction transaction = null;
-        List<Client> clients = null;
+        List<Staff> staffList = null;
         try {
             transaction = entityManager.getTransaction();
             transaction.begin();
-
-            TypedQuery<Client> query = entityManager.createNamedQuery("Client.findAll", Client.class);
-            clients = query.getResultList();
-
+            TypedQuery<Staff> query = entityManager.createNamedQuery("Staff.findAll", Staff.class);
+            staffList = query.getResultList();
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
             }
+            e.printStackTrace();
         }
-        return clients;
+        return staffList;
     }
 }

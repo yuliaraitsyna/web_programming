@@ -8,6 +8,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "Project")
+@NamedQueries({
+        @NamedQuery(name = "Project.findAll", query = "SELECT p FROM Project p"),
+        @NamedQuery(name = "Project.findById", query = "SELECT p FROM Project p WHERE p.id = :id")
+})
 public class Project {
 
     @Id
@@ -18,17 +22,17 @@ public class Project {
     @Temporal(TemporalType.DATE)
     private Date date;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Staff> assignedStaff;
 
     private double cost;
 
     @ManyToOne
-    @JoinColumn(name = "technical_task_id")
+    @JoinColumn(name = "tech_task_id")
     private TechnicalTask assignedTask;
 
     public Project() {
-        // Required by JPA
+
     }
 
     public Project(String title, Date date) {
@@ -102,5 +106,13 @@ public class Project {
 
     public void setAssignedTask(TechnicalTask technicalTask) {
         assignedTask = technicalTask;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

@@ -1,23 +1,29 @@
 package org.example.entity;
 
 import jakarta.persistence.*;
-
 import java.util.HashMap;
 import java.util.Map;
 
 @Entity
-@Table(name = "TechnicalTasks")
+@Table(name = "TechnicalTask")
+@NamedQueries({
+        @NamedQuery(name = "TechnicalTask.findById",
+                query = "SELECT t FROM TechnicalTask t WHERE t.id = :id"),
+        @NamedQuery(name = "TechnicalTask.findAll",
+                query = "SELECT t FROM TechnicalTask t")
+})
 public class TechnicalTask {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String description;
 
-    @ElementCollection
-    @CollectionTable(name = "required_staff", joinColumns = @JoinColumn(name = "task_id"))
-    @MapKeyColumn(name = "qualification")
-    @Column(name = "quantity")
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "RequiredStaff", joinColumns = @JoinColumn(name = "tech_task_id"))
+    @MapKeyColumn(name = "role")
+    @Column(name = "amount")
     private Map<String, Integer> requiredStaff;
 
     @ManyToOne
@@ -25,7 +31,7 @@ public class TechnicalTask {
     private Client client;
 
     public TechnicalTask() {
-        // Required by JPA
+        this.requiredStaff = new HashMap<>();
     }
 
     public TechnicalTask(String description, Client client) {
@@ -58,8 +64,16 @@ public class TechnicalTask {
     public String toString() {
         return "TechnicalTask{" +
                 "description='" + description + '\'' +
-                ", requiredWorkers=" + requiredStaff +
+                ", requiredStaff=" + requiredStaff +
                 ", client=" + client.toString() +
                 '}';
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
     }
 }
