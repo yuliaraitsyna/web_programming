@@ -15,14 +15,7 @@ public class Main {
     public static void main(String[] args) {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("Lab3PU");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-
-        entityManager.getTransaction().begin();
         ClientDao clientDao = new ClientDao();
-
-        System.out.println(clientDao.getAllClients());
-        System.out.print(clientDao.getClientById(1));
-
-        entityManager.getTransaction().commit();
 
         entityManager.close();
         entityManagerFactory.close();
