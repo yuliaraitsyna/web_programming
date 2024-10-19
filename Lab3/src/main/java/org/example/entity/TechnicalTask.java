@@ -1,12 +1,32 @@
 package org.example.entity;
 
+import jakarta.persistence.*;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@Entity
+@Table(name = "TechnicalTasks")
 public class TechnicalTask {
-    private final String description;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String description;
+
+    @ElementCollection
+    @CollectionTable(name = "required_staff", joinColumns = @JoinColumn(name = "task_id"))
+    @MapKeyColumn(name = "qualification")
+    @Column(name = "quantity")
     private Map<String, Integer> requiredStaff;
-    private final Client client;
+
+    @ManyToOne
+    @JoinColumn(name = "client_id")
+    private Client client;
+
+    public TechnicalTask() {
+        // Required by JPA
+    }
 
     public TechnicalTask(String description, Client client) {
         this.description = description;

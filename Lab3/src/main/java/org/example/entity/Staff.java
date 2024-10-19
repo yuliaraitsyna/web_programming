@@ -1,11 +1,24 @@
 package org.example.entity;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "Staff")
 public class Staff {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;             // Field for name
     private String surname;
     private String qualification;
+
     private double salary;
     private boolean isBusy;
+
+    public Staff() {
+        // Required by JPA
+    }
 
     public Staff(String name, String surname, String qualification, double salary) {
         this.name = name;

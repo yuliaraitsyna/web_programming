@@ -1,91 +1,24 @@
 package org.example.dao;
 
-import entity.Client;
-import factory.BaseFactory;
-import factory.Factory;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 
-import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.TypedQuery;
-import java.util.List;
-import java.util.logging.Level;
+public abstract class DAO {
+    protected EntityManager entityManager;
 
-public class ClientDao extends DAO {
-    private BaseFactory factory;
-
-    public ClientDao() {
-        super();
-        this.factory = new Factory();
-    }
-
-    public void addClient(Client client) {
-        EntityTransaction transaction = null;
+    public DAO() {
         try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            entityManager.persist(client);
-            transaction.commit();
+            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("Lab3PU");
+            this.entityManager = entityManagerFactory.createEntityManager();
         } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
-            logger.log(Level.SEVERE, e.getMessage());
+            System.out.println("Failed to create EntityManager: " + e.getMessage());
         }
     }
 
-    public void updateClient(int id, Client updatedClient) {
-        EntityTransaction transaction = null;
-        try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            Client client = entityManager.find(Client.class, id);
-            if (client != null) {
-                client.setName(updatedClient.getName());
-                client.setSurname(updatedClient.getSurname());
-                entityManager.merge(client);
-            }
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
-            logger.log(Level.SEVERE, e.getMessage());
-        }
-    }
-
-    public void deleteClient(int id) {
-        EntityTransaction transaction = null;
-        try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            Client client = entityManager.find(Client.class, id);
-            if (client != null) {
-                entityManager.remove(client);
-            }
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
-            logger.log(Level.SEVERE, e.getMessage());
-        }
-    }
-
-    public Client getClientById(int id) {
-        try {
-            return entityManager.find(Client.class, id);
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, e.getMessage());
-            return null;
-        }
-    }
-
-    public List<Client> getAllClients() {
-        try {
-            TypedQuery<Client> query = entityManager.createQuery("SELECT c FROM Client c", Client.class);
-            return query.getResultList();
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, e.getMessage());
-            return null;
+    public void close() {
+        if (entityManager != null && entityManager.isOpen()) {
+            entityManager.close();
         }
     }
 }

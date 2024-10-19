@@ -1,15 +1,35 @@
 package org.example.entity;
 
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Entity
+@Table(name = "Project")
 public class Project {
-    private final String title;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String title;
+
+    @Temporal(TemporalType.DATE)
     private Date date;
-    private final List<Staff> assignedStaff;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Staff> assignedStaff;
+
     private double cost;
+
+    @ManyToOne
+    @JoinColumn(name = "technical_task_id")
     private TechnicalTask assignedTask;
+
+    public Project() {
+        // Required by JPA
+    }
 
     public Project(String title, Date date) {
         this.title = title;
