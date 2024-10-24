@@ -1,23 +1,12 @@
-package org.example;
+package by.bsu;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
-import org.example.client.ConsoleClient;
-import org.example.dao.ClientDao;
-import org.example.dao.ProjectDao;
-import org.example.dao.StaffDao;
-import org.example.dao.TechnicalTaskDao;
-import org.example.entity.Client;
-import org.example.entity.Project;
-import org.example.entity.Staff;
-import org.example.entity.TechnicalTask;
+import by.bsu.client.ConsoleClient;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class Main {
     public static void main(String[] args) {

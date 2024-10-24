@@ -1,65 +1,58 @@
-package org.example.dao;
+package by.bsu.dao;
 
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
-import org.example.entity.TechnicalTask;
-import org.example.factory.BaseFactory;
-import org.example.factory.Factory;
+import by.bsu.entity.Client;
 
 import java.util.List;
 
-public class TechnicalTaskDao extends DAO {
-    private BaseFactory factory;
+public class ClientDao extends DAO {
+    //private BaseFactory factory;
 
-    public TechnicalTaskDao() {
+    public ClientDao() {
         super();
-        this.factory = new Factory();
+        //this.factory = new Factory();
     }
 
-    public void addTechnicalTask(TechnicalTask technicalTask) {
+    public void addClient(Client client) {
         EntityTransaction transaction = null;
         try {
             transaction = entityManager.getTransaction();
             transaction.begin();
-            entityManager.persist(technicalTask);
+            entityManager.persist(client);
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
             }
-            e.printStackTrace();
         }
     }
 
-    public void updateTechnicalTask(Long id, TechnicalTask updatedTask) {
+    public void updateClient(Long id, Client updatedClient) {
         EntityTransaction transaction = null;
         try {
             transaction = entityManager.getTransaction();
             transaction.begin();
-            TechnicalTask task = entityManager.find(TechnicalTask.class, id);
-            if (task != null) {
-                task.setDescription(updatedTask.getDescription());
-                task.setRequiredStaff(updatedTask.getRequiredStaff());
-                task.setClient(updatedTask.getClient());
-                entityManager.merge(task);
+            Client client = entityManager.find(Client.class, id);
+            if (client != null) {
+                client.setName(updatedClient.getName());
+                client.setSurname(updatedClient.getSurname());
+                entityManager.merge(client);
             }
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
             }
-            e.printStackTrace();
         }
     }
 
-    public void deleteTechnicalTask(Long id) {
+    public void deleteClient(Long id) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            TechnicalTask task = entityManager.find(TechnicalTask.class, id);
-            if (task != null) {
-                entityManager.remove(task);
-            }
+            Client client = entityManager.find(Client.class, id);
+            entityManager.remove(client);
             transaction.commit();
         } catch (Exception e) {
             if (transaction.isActive()) {
@@ -69,44 +62,42 @@ public class TechnicalTaskDao extends DAO {
         }
     }
 
-    public TechnicalTask getTechnicalTaskById(Long id) {
+    public Client getClientById(Long id) {
         EntityTransaction transaction = null;
-        TechnicalTask task = null;
+        Client client = null;
         try {
             transaction = entityManager.getTransaction();
             transaction.begin();
 
-            TypedQuery<TechnicalTask> query = entityManager.createNamedQuery("TechnicalTask.findById", TechnicalTask.class);
+            TypedQuery<Client> query = entityManager.createNamedQuery("Client.findById", Client.class);
             query.setParameter("id", id);
-            task = query.getSingleResult();
+            client = query.getSingleResult();
 
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
             }
-            e.printStackTrace();
         }
-        return task;
+        return client;
     }
 
-    public List<TechnicalTask> getAllTechnicalTasks() {
+    public List<Client> getAllClients() {
         EntityTransaction transaction = null;
-        List<TechnicalTask> tasks = null;
+        List<Client> clients = null;
         try {
             transaction = entityManager.getTransaction();
             transaction.begin();
 
-            TypedQuery<TechnicalTask> query = entityManager.createNamedQuery("TechnicalTask.findAll", TechnicalTask.class);
-            tasks = query.getResultList();
+            TypedQuery<Client> query = entityManager.createNamedQuery("Client.findAll", Client.class);
+            clients = query.getResultList();
 
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
             }
-            e.printStackTrace();
         }
-        return tasks;
+        return clients;
     }
 }

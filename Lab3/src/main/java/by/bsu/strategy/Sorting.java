@@ -1,7 +1,7 @@
-package org.example.strategy;
+package by.bsu.strategy;
 
-import org.example.entity.Project;
-import org.example.strategy.comparator.ProjectComparator;
+import by.bsu.entity.Project;
+import by.bsu.strategy.comparator.ProjectComparator;
 
 import java.util.Collections;
 import java.util.List;

@@ -1,27 +1,27 @@
-package org.example.dao;
+package by.bsu.dao;
 
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
-import org.example.entity.Staff;
-import org.example.factory.BaseFactory;
-import org.example.factory.Factory;
+import by.bsu.entity.TechnicalTask;
+import by.bsu.factory.BaseFactory;
+import by.bsu.factory.Factory;
 
 import java.util.List;
 
-public class StaffDao extends DAO {
+public class TechnicalTaskDao extends DAO {
     private BaseFactory factory;
 
-    public StaffDao() {
+    public TechnicalTaskDao() {
         super();
         this.factory = new Factory();
     }
 
-    public void addStaff(Staff staff) {
+    public void addTechnicalTask(TechnicalTask technicalTask) {
         EntityTransaction transaction = null;
         try {
             transaction = entityManager.getTransaction();
             transaction.begin();
-            entityManager.persist(staff);
+            entityManager.persist(technicalTask);
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null && transaction.isActive()) {
@@ -31,19 +31,17 @@ public class StaffDao extends DAO {
         }
     }
 
-    public void updateStaff(Long id, Staff updatedStaff) {
+    public void updateTechnicalTask(Long id, TechnicalTask updatedTask) {
         EntityTransaction transaction = null;
         try {
             transaction = entityManager.getTransaction();
             transaction.begin();
-            Staff staff = entityManager.find(Staff.class, id);
-            if (staff != null) {
-                staff.setName(updatedStaff.getName());
-                staff.setSurname(updatedStaff.getSurname());
-                staff.setQualification(updatedStaff.getQualification());
-                staff.setSalary(updatedStaff.getSalary());
-                staff.setBusy(updatedStaff.isBusy());
-                entityManager.merge(staff);
+            TechnicalTask task = entityManager.find(TechnicalTask.class, id);
+            if (task != null) {
+                task.setDescription(updatedTask.getDescription());
+                task.setRequiredStaff(updatedTask.getRequiredStaff());
+                task.setClient(updatedTask.getClient());
+                entityManager.merge(task);
             }
             transaction.commit();
         } catch (Exception e) {
@@ -54,13 +52,13 @@ public class StaffDao extends DAO {
         }
     }
 
-    public void deleteStaff(Long id) {
+    public void deleteTechnicalTask(Long id) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            Staff staff = entityManager.find(Staff.class, id);
-            if (staff != null) {
-                entityManager.remove(staff);
+            TechnicalTask task = entityManager.find(TechnicalTask.class, id);
+            if (task != null) {
+                entityManager.remove(task);
             }
             transaction.commit();
         } catch (Exception e) {
@@ -71,15 +69,17 @@ public class StaffDao extends DAO {
         }
     }
 
-    public Staff getStaffById(Long id) {
+    public TechnicalTask getTechnicalTaskById(Long id) {
         EntityTransaction transaction = null;
-        Staff staff = null;
+        TechnicalTask task = null;
         try {
             transaction = entityManager.getTransaction();
             transaction.begin();
-            TypedQuery<Staff> query = entityManager.createNamedQuery("Staff.findById", Staff.class);
+
+            TypedQuery<TechnicalTask> query = entityManager.createNamedQuery("TechnicalTask.findById", TechnicalTask.class);
             query.setParameter("id", id);
-            staff = query.getSingleResult();
+            task = query.getSingleResult();
+
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null && transaction.isActive()) {
@@ -87,17 +87,19 @@ public class StaffDao extends DAO {
             }
             e.printStackTrace();
         }
-        return staff;
+        return task;
     }
 
-    public List<Staff> getAllStaff() {
+    public List<TechnicalTask> getAllTechnicalTasks() {
         EntityTransaction transaction = null;
-        List<Staff> staffList = null;
+        List<TechnicalTask> tasks = null;
         try {
             transaction = entityManager.getTransaction();
             transaction.begin();
-            TypedQuery<Staff> query = entityManager.createNamedQuery("Staff.findAll", Staff.class);
-            staffList = query.getResultList();
+
+            TypedQuery<TechnicalTask> query = entityManager.createNamedQuery("TechnicalTask.findAll", TechnicalTask.class);
+            tasks = query.getResultList();
+
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null && transaction.isActive()) {
@@ -105,6 +107,6 @@ public class StaffDao extends DAO {
             }
             e.printStackTrace();
         }
-        return staffList;
+        return tasks;
     }
 }

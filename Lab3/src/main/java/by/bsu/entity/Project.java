@@ -1,4 +1,4 @@
-package org.example.entity;
+package by.bsu.entity;
 
 import jakarta.persistence.*;
 

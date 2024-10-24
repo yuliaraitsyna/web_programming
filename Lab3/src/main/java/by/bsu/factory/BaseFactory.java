@@ -1,10 +1,10 @@
-package org.example.factory;
+package by.bsu.factory;
 
 
-import org.example.entity.Client;
-import org.example.entity.Project;
-import org.example.entity.Staff;
-import org.example.entity.TechnicalTask;
+import by.bsu.entity.Client;
+import by.bsu.entity.Project;
+import by.bsu.entity.Staff;
+import by.bsu.entity.TechnicalTask;
 
 import java.util.Date;
 

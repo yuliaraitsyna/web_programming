@@ -1,4 +1,4 @@
-package org.example.entity;
+package by.bsu.entity;
 
 import jakarta.persistence.*;
 
@@ -23,7 +23,7 @@ public class Client {
     private String surname;
 
     public Client() {
-        // Required by JPA
+
     }
 
     public Client(String name, String surname) {

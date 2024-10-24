@@ -1,4 +1,4 @@
-package org.example.entity.model;
+package by.bsu.entity.model;
 
 public enum SortAction {
     TITLE(0),

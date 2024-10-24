@@ -1,8 +1,8 @@
-package org.example.strategy;
+package by.bsu.strategy;
 
 
 
-import org.example.entity.Project;
+import by.bsu.entity.Project;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -1,27 +1,27 @@
-package org.example.dao;
+package by.bsu.dao;
 
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
-import org.example.entity.Project;
-import org.example.factory.BaseFactory;
-import org.example.factory.Factory;
+import by.bsu.entity.Staff;
+import by.bsu.factory.BaseFactory;
+import by.bsu.factory.Factory;
 
 import java.util.List;
 
-public class ProjectDao extends DAO {
+public class StaffDao extends DAO {
     private BaseFactory factory;
 
-    public ProjectDao() {
+    public StaffDao() {
         super();
         this.factory = new Factory();
     }
 
-    public void addProject(Project project) {
+    public void addStaff(Staff staff) {
         EntityTransaction transaction = null;
         try {
             transaction = entityManager.getTransaction();
             transaction.begin();
-            entityManager.persist(project);
+            entityManager.persist(staff);
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null && transaction.isActive()) {
@@ -31,16 +31,19 @@ public class ProjectDao extends DAO {
         }
     }
 
-    public void updateProject(Long id, Project updatedProject) {
+    public void updateStaff(Long id, Staff updatedStaff) {
         EntityTransaction transaction = null;
         try {
             transaction = entityManager.getTransaction();
             transaction.begin();
-            Project project = entityManager.find(Project.class, id);
-            if (project != null) {
-                project.setTitle(updatedProject.getTitle());
-                project.setDate(updatedProject.getDate());
-                entityManager.merge(project);
+            Staff staff = entityManager.find(Staff.class, id);
+            if (staff != null) {
+                staff.setName(updatedStaff.getName());
+                staff.setSurname(updatedStaff.getSurname());
+                staff.setQualification(updatedStaff.getQualification());
+                staff.setSalary(updatedStaff.getSalary());
+                staff.setBusy(updatedStaff.isBusy());
+                entityManager.merge(staff);
             }
             transaction.commit();
         } catch (Exception e) {
@@ -51,12 +54,14 @@ public class ProjectDao extends DAO {
         }
     }
 
-    public void deleteProject(Long id) {
+    public void deleteStaff(Long id) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            Project project = entityManager.find(Project.class, id);
-            entityManager.remove(project);
+            Staff staff = entityManager.find(Staff.class, id);
+            if (staff != null) {
+                entityManager.remove(staff);
+            }
             transaction.commit();
         } catch (Exception e) {
             if (transaction.isActive()) {
@@ -66,17 +71,15 @@ public class ProjectDao extends DAO {
         }
     }
 
-    public Project getProjectById(Long id) {
+    public Staff getStaffById(Long id) {
         EntityTransaction transaction = null;
-        Project project = null;
+        Staff staff = null;
         try {
             transaction = entityManager.getTransaction();
             transaction.begin();
-
-            TypedQuery<Project> query = entityManager.createNamedQuery("Project.findById", Project.class);
+            TypedQuery<Staff> query = entityManager.createNamedQuery("Staff.findById", Staff.class);
             query.setParameter("id", id);
-            project = query.getSingleResult();
-
+            staff = query.getSingleResult();
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null && transaction.isActive()) {
@@ -84,19 +87,17 @@ public class ProjectDao extends DAO {
             }
             e.printStackTrace();
         }
-        return project;
+        return staff;
     }
 
-    public List<Project> getAllProjects() {
+    public List<Staff> getAllStaff() {
         EntityTransaction transaction = null;
-        List<Project> projects = null;
+        List<Staff> staffList = null;
         try {
             transaction = entityManager.getTransaction();
             transaction.begin();
-
-            TypedQuery<Project> query = entityManager.createNamedQuery("Project.findAll", Project.class);
-            projects = query.getResultList();
-
+            TypedQuery<Staff> query = entityManager.createNamedQuery("Staff.findAll", Staff.class);
+            staffList = query.getResultList();
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null && transaction.isActive()) {
@@ -104,6 +105,6 @@ public class ProjectDao extends DAO {
             }
             e.printStackTrace();
         }
-        return projects;
+        return staffList;
     }
 }

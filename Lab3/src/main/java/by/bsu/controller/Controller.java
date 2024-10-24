@@ -1,15 +1,13 @@
-package org.example.controller;
+package by.bsu.controller;
 
-import org.example.dao.ClientDao;
-import org.example.dao.ProjectDao;
-import org.example.dao.StaffDao;
-import org.example.dao.TechnicalTaskDao;
-import org.example.entity.Client;
-import org.example.entity.Project;
-import org.example.entity.Staff;
-import org.example.entity.TechnicalTask;
-import org.example.entity.model.SortAction;
-import org.example.strategy.Sorting;
+import by.bsu.dao.ClientDao;
+import by.bsu.dao.ProjectDao;
+import by.bsu.dao.StaffDao;
+import by.bsu.dao.TechnicalTaskDao;
+import by.bsu.entity.Client;
+import by.bsu.entity.Project;
+import by.bsu.entity.Staff;
+import by.bsu.entity.TechnicalTask;
 
 import java.io.IOException;
 import java.sql.SQLException;

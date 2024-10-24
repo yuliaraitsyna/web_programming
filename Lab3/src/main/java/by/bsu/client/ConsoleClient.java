@@ -1,12 +1,12 @@
-package org.example.client;
+package by.bsu.client;
 
-import org.example.controller.Controller;
-import org.example.entity.Client;
-import org.example.entity.Project;
-import org.example.entity.Staff;
-import org.example.entity.TechnicalTask;
-import org.example.strategy.Searcher;
-import org.example.strategy.Sorting;
+import by.bsu.controller.Controller;
+import by.bsu.entity.Client;
+import by.bsu.entity.Project;
+import by.bsu.entity.Staff;
+import by.bsu.entity.TechnicalTask;
+import by.bsu.strategy.Searcher;
+import by.bsu.strategy.Sorting;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -467,7 +467,6 @@ public class ConsoleClient {
 
         List<Staff> availableStaff = controller.getAllStaff();
 
-        // Call the method to assign staff to the project
         controller.assignStaff(task, project, availableStaff);
     }
 }

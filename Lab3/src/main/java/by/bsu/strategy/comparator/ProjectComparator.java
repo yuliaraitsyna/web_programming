@@ -1,6 +1,6 @@
-package org.example.strategy.comparator;
+package by.bsu.strategy.comparator;
 
-import org.example.entity.Project;
+import by.bsu.entity.Project;
 import java.util.Comparator;
 
 public class ProjectComparator {
