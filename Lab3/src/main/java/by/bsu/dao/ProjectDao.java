@@ -1,30 +1,30 @@
 package by.bsu.dao;
 
+import by.bsu.metamodel.Project_;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 import by.bsu.entity.Project;
-import by.bsu.factory.BaseFactory;
-import by.bsu.factory.Factory;
+import jakarta.persistence.criteria.CriteriaDelete;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.CriteriaUpdate;
+import jakarta.persistence.criteria.Root;
 
 import java.util.List;
 
 public class ProjectDao extends DAO {
-    private BaseFactory factory;
 
     public ProjectDao() {
         super();
-        this.factory = new Factory();
     }
 
     public void addProject(Project project) {
-        EntityTransaction transaction = null;
+        EntityTransaction transaction = entityManager.getTransaction();
         try {
-            transaction = entityManager.getTransaction();
             transaction.begin();
             entityManager.persist(project);
             transaction.commit();
         } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
+            if (transaction.isActive()) {
                 transaction.rollback();
             }
             e.printStackTrace();
@@ -32,19 +32,21 @@ public class ProjectDao extends DAO {
     }
 
     public void updateProject(Long id, Project updatedProject) {
-        EntityTransaction transaction = null;
+        EntityTransaction transaction = entityManager.getTransaction();
         try {
-            transaction = entityManager.getTransaction();
             transaction.begin();
-            Project project = entityManager.find(Project.class, id);
-            if (project != null) {
-                project.setTitle(updatedProject.getTitle());
-                project.setDate(updatedProject.getDate());
-                entityManager.merge(project);
-            }
+
+            CriteriaUpdate<Project> update = criteriaBuilder.createCriteriaUpdate(Project.class);
+            Root<Project> root = update.from(Project.class);
+
+            update.set(root.get(Project_.title), updatedProject.getTitle())
+                    .set(root.get(Project_.date), updatedProject.getDate())
+                    .where(criteriaBuilder.equal(root.get(Project_.id), id));
+
+            entityManager.createQuery(update).executeUpdate();
             transaction.commit();
         } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
+            if (transaction.isActive()) {
                 transaction.rollback();
             }
             e.printStackTrace();
@@ -55,8 +57,10 @@ public class ProjectDao extends DAO {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            Project project = entityManager.find(Project.class, id);
-            entityManager.remove(project);
+            CriteriaDelete<Project> delete = criteriaBuilder.createCriteriaDelete(Project.class);
+            Root<Project> root = delete.from(Project.class);
+            delete.where(criteriaBuilder.equal(root.get(Project_.id), id));
+            entityManager.createQuery(delete).executeUpdate();
             transaction.commit();
         } catch (Exception e) {
             if (transaction.isActive()) {
@@ -67,43 +71,19 @@ public class ProjectDao extends DAO {
     }
 
     public Project getProjectById(Long id) {
-        EntityTransaction transaction = null;
-        Project project = null;
-        try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
+        CriteriaQuery<Project> query = criteriaBuilder.createQuery(Project.class);
+        Root<Project> root = query.from(Project.class);
+        query.select(root).where(criteriaBuilder.equal(root.get(Project_.id), id));
 
-            TypedQuery<Project> query = entityManager.createNamedQuery("Project.findById", Project.class);
-            query.setParameter("id", id);
-            project = query.getSingleResult();
-
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        }
-        return project;
+        return entityManager.createQuery(query).getSingleResult();
     }
 
     public List<Project> getAllProjects() {
-        EntityTransaction transaction = null;
-        List<Project> projects = null;
-        try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
+        CriteriaQuery<Project> query = criteriaBuilder.createQuery(Project.class);
+        Root<Project> root = query.from(Project.class);
+        query.select(root);
 
-            TypedQuery<Project> query = entityManager.createNamedQuery("Project.findAll", Project.class);
-            projects = query.getResultList();
-
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        }
-        return projects;
+        return entityManager.createQuery(query).getResultList();
     }
+
 }

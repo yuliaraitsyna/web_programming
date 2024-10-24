@@ -12,11 +12,9 @@ import jakarta.persistence.criteria.Root;
 import java.util.List;
 
 public class ClientDao extends DAO {
-    //private BaseFactory factory;
 
     public ClientDao() {
         super();
-        //this.factory = new Factory();
     }
 
     public void addClient(Client client) {
@@ -55,7 +53,6 @@ public class ClientDao extends DAO {
         }
     }
 
-
     public void deleteClient(Long id) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
@@ -72,7 +69,6 @@ public class ClientDao extends DAO {
             e.printStackTrace();
         }
     }
-
 
     public Client getClientById(Long id) {
         CriteriaQuery<Client> query = criteriaBuilder.createQuery(Client.class);
