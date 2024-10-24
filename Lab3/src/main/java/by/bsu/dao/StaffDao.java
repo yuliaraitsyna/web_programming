@@ -1,10 +1,15 @@
 package by.bsu.dao;
 
+import by.bsu.metamodel.Staff_;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 import by.bsu.entity.Staff;
 import by.bsu.factory.BaseFactory;
 import by.bsu.factory.Factory;
+import jakarta.persistence.criteria.CriteriaDelete;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.CriteriaUpdate;
+import jakarta.persistence.criteria.Root;
 
 import java.util.List;
 
@@ -32,22 +37,23 @@ public class StaffDao extends DAO {
     }
 
     public void updateStaff(Long id, Staff updatedStaff) {
-        EntityTransaction transaction = null;
+        EntityTransaction transaction = entityManager.getTransaction();
         try {
-            transaction = entityManager.getTransaction();
             transaction.begin();
-            Staff staff = entityManager.find(Staff.class, id);
-            if (staff != null) {
-                staff.setName(updatedStaff.getName());
-                staff.setSurname(updatedStaff.getSurname());
-                staff.setQualification(updatedStaff.getQualification());
-                staff.setSalary(updatedStaff.getSalary());
-                staff.setBusy(updatedStaff.isBusy());
-                entityManager.merge(staff);
-            }
+            CriteriaUpdate<Staff> update = criteriaBuilder.createCriteriaUpdate(Staff.class);
+            Root<Staff> root = update.from(Staff.class);
+
+            update.set(root.get(Staff_.name), updatedStaff.getName())
+                    .set(root.get(Staff_.surname), updatedStaff.getSurname())
+                    .set(root.get(Staff_.qualification), updatedStaff.getQualification())
+                    .set(root.get(Staff_.salary), updatedStaff.getSalary())
+                    .set(root.get(Staff_.isBusy), updatedStaff.isBusy())
+                    .where(criteriaBuilder.equal(root.get(Staff_.id), id));
+
+            entityManager.createQuery(update).executeUpdate();
             transaction.commit();
         } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
+            if (transaction.isActive()) {
                 transaction.rollback();
             }
             e.printStackTrace();
@@ -58,10 +64,11 @@ public class StaffDao extends DAO {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            Staff staff = entityManager.find(Staff.class, id);
-            if (staff != null) {
-                entityManager.remove(staff);
-            }
+            CriteriaDelete<Staff> delete = criteriaBuilder.createCriteriaDelete(Staff.class);
+            Root<Staff> root = delete.from(Staff.class);
+            delete.where(criteriaBuilder.equal(root.get(Staff_.id), id));
+
+            entityManager.createQuery(delete).executeUpdate();
             transaction.commit();
         } catch (Exception e) {
             if (transaction.isActive()) {
@@ -72,39 +79,18 @@ public class StaffDao extends DAO {
     }
 
     public Staff getStaffById(Long id) {
-        EntityTransaction transaction = null;
-        Staff staff = null;
-        try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            TypedQuery<Staff> query = entityManager.createNamedQuery("Staff.findById", Staff.class);
-            query.setParameter("id", id);
-            staff = query.getSingleResult();
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        }
-        return staff;
+        CriteriaQuery<Staff> query = criteriaBuilder.createQuery(Staff.class);
+        Root<Staff> root = query.from(Staff.class);
+        query.select(root).where(criteriaBuilder.equal(root.get(Staff_.id), id));
+
+        return entityManager.createQuery(query).getSingleResult();
     }
 
     public List<Staff> getAllStaff() {
-        EntityTransaction transaction = null;
-        List<Staff> staffList = null;
-        try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            TypedQuery<Staff> query = entityManager.createNamedQuery("Staff.findAll", Staff.class);
-            staffList = query.getResultList();
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        }
-        return staffList;
+        CriteriaQuery<Staff> query = criteriaBuilder.createQuery(Staff.class);
+        Root<Staff> root = query.from(Staff.class);
+        query.select(root);
+
+        return entityManager.createQuery(query).getResultList();
     }
 }
