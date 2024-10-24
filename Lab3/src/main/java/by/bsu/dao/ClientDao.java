@@ -1,8 +1,13 @@
 package by.bsu.dao;
 
+import by.bsu.metamodel.Client_;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 import by.bsu.entity.Client;
+import jakarta.persistence.criteria.CriteriaDelete;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.CriteriaUpdate;
+import jakarta.persistence.criteria.Root;
 
 import java.util.List;
 
@@ -29,30 +34,18 @@ public class ClientDao extends DAO {
     }
 
     public void updateClient(Long id, Client updatedClient) {
-        EntityTransaction transaction = null;
-        try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            Client client = entityManager.find(Client.class, id);
-            if (client != null) {
-                client.setName(updatedClient.getName());
-                client.setSurname(updatedClient.getSurname());
-                entityManager.merge(client);
-            }
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
-        }
-    }
-
-    public void deleteClient(Long id) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            Client client = entityManager.find(Client.class, id);
-            entityManager.remove(client);
+
+            CriteriaUpdate<Client> update = criteriaBuilder.createCriteriaUpdate(Client.class);
+            Root<Client> root = update.from(Client.class);
+
+            update.set(root.get(Client_.name), updatedClient.getName())
+                    .set(root.get(Client_.surname), updatedClient.getSurname())
+                    .where(criteriaBuilder.equal(root.get(Client_.id), id));
+
+            entityManager.createQuery(update).executeUpdate();
             transaction.commit();
         } catch (Exception e) {
             if (transaction.isActive()) {
@@ -62,42 +55,39 @@ public class ClientDao extends DAO {
         }
     }
 
-    public Client getClientById(Long id) {
-        EntityTransaction transaction = null;
-        Client client = null;
+
+    public void deleteClient(Long id) {
+        EntityTransaction transaction = entityManager.getTransaction();
         try {
-            transaction = entityManager.getTransaction();
             transaction.begin();
-
-            TypedQuery<Client> query = entityManager.createNamedQuery("Client.findById", Client.class);
-            query.setParameter("id", id);
-            client = query.getSingleResult();
-
+            CriteriaDelete<Client> delete = criteriaBuilder.createCriteriaDelete(Client.class);
+            Root<Client> root = delete.from(Client.class);
+            delete.where(criteriaBuilder.equal(root.get(Client_.id), id));
+            entityManager.createQuery(delete).executeUpdate();
             transaction.commit();
         } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
+            if (transaction.isActive()) {
                 transaction.rollback();
             }
+            e.printStackTrace();
         }
-        return client;
+    }
+
+
+    public Client getClientById(Long id) {
+        CriteriaQuery<Client> query = criteriaBuilder.createQuery(Client.class);
+        Root<Client> root = query.from(Client.class);
+        query.select(root).where(criteriaBuilder.equal(root.get(Client_.id), id));
+
+        return entityManager.createQuery(query).getSingleResult();
     }
 
     public List<Client> getAllClients() {
-        EntityTransaction transaction = null;
-        List<Client> clients = null;
-        try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
+        CriteriaQuery<Client> query = criteriaBuilder.createQuery(Client.class);
+        Root<Client> root = query.from(Client.class);
+        query.select(root);
 
-            TypedQuery<Client> query = entityManager.createNamedQuery("Client.findAll", Client.class);
-            clients = query.getResultList();
-
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
-        }
-        return clients;
+        return entityManager.createQuery(query).getResultList();
     }
+
 }
