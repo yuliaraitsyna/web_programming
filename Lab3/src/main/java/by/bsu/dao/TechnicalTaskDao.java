@@ -1,10 +1,15 @@
 package by.bsu.dao;
 
+import by.bsu.metamodel.TechnicalTask_;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 import by.bsu.entity.TechnicalTask;
 import by.bsu.factory.BaseFactory;
 import by.bsu.factory.Factory;
+import jakarta.persistence.criteria.CriteriaDelete;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.CriteriaUpdate;
+import jakarta.persistence.criteria.Root;
 
 import java.util.List;
 
@@ -32,20 +37,21 @@ public class TechnicalTaskDao extends DAO {
     }
 
     public void updateTechnicalTask(Long id, TechnicalTask updatedTask) {
-        EntityTransaction transaction = null;
+        EntityTransaction transaction = entityManager.getTransaction();
         try {
-            transaction = entityManager.getTransaction();
             transaction.begin();
-            TechnicalTask task = entityManager.find(TechnicalTask.class, id);
-            if (task != null) {
-                task.setDescription(updatedTask.getDescription());
-                task.setRequiredStaff(updatedTask.getRequiredStaff());
-                task.setClient(updatedTask.getClient());
-                entityManager.merge(task);
-            }
+            CriteriaUpdate<TechnicalTask> update = criteriaBuilder.createCriteriaUpdate(TechnicalTask.class);
+            Root<TechnicalTask> root = update.from(TechnicalTask.class);
+
+            update.set(root.get(TechnicalTask_.description), updatedTask.getDescription())
+                    .set(String.valueOf(root.get(TechnicalTask_.requiredStaff)), updatedTask.getRequiredStaff())
+                    .set(root.get(TechnicalTask_.client), updatedTask.getClient())
+                    .where(criteriaBuilder.equal(root.get(TechnicalTask_.id), id));
+
+            entityManager.createQuery(update).executeUpdate();
             transaction.commit();
         } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
+            if (transaction.isActive()) {
                 transaction.rollback();
             }
             e.printStackTrace();
@@ -56,10 +62,11 @@ public class TechnicalTaskDao extends DAO {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            TechnicalTask task = entityManager.find(TechnicalTask.class, id);
-            if (task != null) {
-                entityManager.remove(task);
-            }
+            CriteriaDelete<TechnicalTask> delete = criteriaBuilder.createCriteriaDelete(TechnicalTask.class);
+            Root<TechnicalTask> root = delete.from(TechnicalTask.class);
+            delete.where(criteriaBuilder.equal(root.get(TechnicalTask_.id), id));
+
+            entityManager.createQuery(delete).executeUpdate();
             transaction.commit();
         } catch (Exception e) {
             if (transaction.isActive()) {
@@ -70,43 +77,18 @@ public class TechnicalTaskDao extends DAO {
     }
 
     public TechnicalTask getTechnicalTaskById(Long id) {
-        EntityTransaction transaction = null;
-        TechnicalTask task = null;
-        try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
+        CriteriaQuery<TechnicalTask> query = criteriaBuilder.createQuery(TechnicalTask.class);
+        Root<TechnicalTask> root = query.from(TechnicalTask.class);
+        query.select(root).where(criteriaBuilder.equal(root.get(TechnicalTask_.id), id));
 
-            TypedQuery<TechnicalTask> query = entityManager.createNamedQuery("TechnicalTask.findById", TechnicalTask.class);
-            query.setParameter("id", id);
-            task = query.getSingleResult();
-
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        }
-        return task;
+        return entityManager.createQuery(query).getSingleResult();
     }
 
     public List<TechnicalTask> getAllTechnicalTasks() {
-        EntityTransaction transaction = null;
-        List<TechnicalTask> tasks = null;
-        try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
+        CriteriaQuery<TechnicalTask> query = criteriaBuilder.createQuery(TechnicalTask.class);
+        Root<TechnicalTask> root = query.from(TechnicalTask.class);
+        query.select(root);
 
-            TypedQuery<TechnicalTask> query = entityManager.createNamedQuery("TechnicalTask.findAll", TechnicalTask.class);
-            tasks = query.getResultList();
-
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        }
-        return tasks;
+        return entityManager.createQuery(query).getResultList();
     }
 }
