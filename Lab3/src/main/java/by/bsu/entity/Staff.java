@@ -4,12 +4,6 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "Staff")
-@NamedQueries({
-        @NamedQuery(name = "Staff.findById",
-                query = "SELECT s FROM Staff s WHERE s.id = :id"),
-        @NamedQuery(name = "Staff.findAll",
-                query = "SELECT s FROM Staff s")
-})
 public class Staff {
 
     @Id
@@ -37,7 +31,7 @@ public class Staff {
     private Project project;
 
     public Staff() {
-        // Required by JPA
+
     }
 
     public Staff(String name, String surname, String qualification, double salary) {

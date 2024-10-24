@@ -6,12 +6,6 @@ import java.util.Map;
 
 @Entity
 @Table(name = "TechnicalTask")
-@NamedQueries({
-        @NamedQuery(name = "TechnicalTask.findById",
-                query = "SELECT t FROM TechnicalTask t WHERE t.id = :id"),
-        @NamedQuery(name = "TechnicalTask.findAll",
-                query = "SELECT t FROM TechnicalTask t")
-})
 public class TechnicalTask {
 
     @Id
