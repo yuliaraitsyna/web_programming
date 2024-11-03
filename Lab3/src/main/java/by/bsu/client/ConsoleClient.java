@@ -1,12 +1,15 @@
 package by.bsu.client;
 
 import by.bsu.controller.Controller;
+import by.bsu.dao.ClientDao;
 import by.bsu.entity.Client;
 import by.bsu.entity.Project;
 import by.bsu.entity.Staff;
 import by.bsu.entity.TechnicalTask;
 import by.bsu.strategy.Searcher;
 import by.bsu.strategy.Sorting;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -18,6 +21,7 @@ public class ConsoleClient {
 
     private Controller controller;
     private Searcher searcher;
+    private static final Logger logger = LogManager.getLogger(ConsoleClient.class);
 
     public ConsoleClient() throws SQLException, IOException {
         controller = new Controller();
@@ -125,7 +129,7 @@ public class ConsoleClient {
         try {
             controller.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Failed to close controller.");
         }
     }
 
@@ -135,12 +139,7 @@ public class ConsoleClient {
         System.out.print("Enter client surname: ");
         String surname = scanner.nextLine();
         Client client = new Client(name, surname);
-        try {
-            controller.addClient(client);
-            System.out.println("Client added successfully.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        controller.addClient(client);
     }
 
     private void updateClient(Scanner scanner) {
@@ -152,32 +151,18 @@ public class ConsoleClient {
         System.out.print("Enter new client surname: ");
         String surname = scanner.nextLine();
         Client client = new Client(name, surname);
-        try {
-            controller.updateClient(id, client);
-            System.out.println("Client updated successfully.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        controller.updateClient(id, client);
     }
 
     private void deleteClient(Scanner scanner) {
         System.out.print("Enter client ID to delete: ");
         Long id = scanner.nextLong();
-        try {
-            controller.deleteClient(id);
-            System.out.println("Client deleted successfully.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        controller.deleteClient(id);
     }
 
     private void listClients() {
-        try {
-            List<Client> clients = controller.getAllClients();
-            clients.forEach(client -> System.out.println(client));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        List<Client> clients = controller.getAllClients();
+        clients.forEach(client -> System.out.println(client));
     }
 
     private void addProject(Scanner scanner) {
@@ -187,12 +172,8 @@ public class ConsoleClient {
         String dateString = scanner.nextLine();
         Date date = parseDate(dateString);
         Project project = new Project(name, date);
-        try {
-            controller.addProject(project);
-            System.out.println("Project added successfully.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        controller.addProject(project);
+        System.out.println("Project added successfully.");
     }
 
     private void updateProject(Scanner scanner) {
@@ -205,12 +186,7 @@ public class ConsoleClient {
         String dateString = scanner.nextLine();
         Date date = parseDate(dateString);
         Project project = new Project(name, date);
-        try {
-            controller.updateProject(id, project);
-            System.out.println("Project updated successfully.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        controller.updateProject(id, project);
     }
 
     private Date parseDate(String dateString) {
@@ -225,21 +201,12 @@ public class ConsoleClient {
     private void deleteProject(Scanner scanner) {
         System.out.print("Enter project ID to delete: ");
         Long id = scanner.nextLong();
-        try {
-            controller.deleteProject(id);
-            System.out.println("Project deleted successfully.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        controller.deleteProject(id);
     }
 
     private void listProjects() {
-        try {
-            List<Project> projects = controller.getAllProjects();
-            projects.forEach(project -> System.out.println(project));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        List<Project> projects = controller.getAllProjects();
+        projects.forEach(project -> System.out.println(project));
     }
 
     private void addTechnicalTask(Scanner scanner) throws SQLException {
@@ -250,50 +217,31 @@ public class ConsoleClient {
         Long clientId = scanner.nextLong();
         Client client = controller.getClientById(clientId);
         TechnicalTask task = new TechnicalTask(description, client);
-        try {
-            controller.addTechnicalTask(task);
-            System.out.println("Technical task added successfully.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        controller.addTechnicalTask(task);
     }
 
     private void updateTechnicalTask(Scanner scanner) throws SQLException {
         System.out.print("Enter technical task ID to update: ");
         Long id = scanner.nextLong();
-        scanner.nextLine(); // consume the newline
+        scanner.nextLine();
         System.out.print("Enter new technical task description: ");
         String description = scanner.nextLine();
         System.out.print("Enter client ID for the task: ");
         Long clientId = scanner.nextLong();
         Client client = controller.getClientById(clientId);
         TechnicalTask task = new TechnicalTask(description, client);
-        try {
-            controller.updateTechnicalTask(id, task);
-            System.out.println("Technical task updated successfully.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        controller.updateTechnicalTask(id, task);
     }
 
     private void deleteTechnicalTask(Scanner scanner) {
         System.out.print("Enter technical task ID to delete: ");
         Long id = scanner.nextLong();
-        try {
-            controller.deleteTechnicalTask(id);
-            System.out.println("Technical task deleted successfully.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        controller.deleteTechnicalTask(id);
     }
 
     private void listTechnicalTasks() {
-        try {
-            List<TechnicalTask> tasks = controller.getAllTechnicalTasks();
-            tasks.forEach(task -> System.out.println(task));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        List<TechnicalTask> tasks = controller.getAllTechnicalTasks();
+        tasks.forEach(task -> System.out.println(task));
     }
 
     private void addStaff(Scanner scanner) {
@@ -323,12 +271,8 @@ public class ConsoleClient {
 
         Staff staff = new Staff(name, surname, qualification, salary);
 
-        try {
-            controller.addStaff(staff);
-            System.out.println("Staff added successfully.");
-        } catch (SQLException e) {
-            System.out.println("Error adding staff: " + e.getMessage());
-        }
+        controller.addStaff(staff);
+        System.out.println("Staff added successfully.");
     }
 
     private void updateStaff(Scanner scanner) {
@@ -369,47 +313,31 @@ public class ConsoleClient {
 
         Staff staff = new Staff(name, surname, qualification, salary);
 
-        try {
-            controller.updateStaff(id, staff);
-            System.out.println("Staff updated successfully.");
-        } catch (SQLException e) {
-            System.out.println("Error updating staff: " + e.getMessage());
-        }
+        controller.updateStaff(id, staff);
+        System.out.println("Staff updated successfully.");
     }
 
     private void deleteStaff(Scanner scanner) {
         System.out.print("Enter staff ID to delete: ");
         Long id = scanner.nextLong();
-        try {
-            controller.deleteStaff(id);
-            System.out.println("Staff deleted successfully.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        controller.deleteStaff(id);
+        System.out.println("Staff deleted successfully.");
     }
 
     private void listStaff() {
-        try {
-            List<Staff> staffList = controller.getAllStaff();
-            staffList.forEach(staff -> System.out.println(staff));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        List<Staff> staffList = controller.getAllStaff();
+        staffList.forEach(staff -> System.out.println(staff));
     }
 
     private void searchProjects(Scanner scanner) {
         System.out.print("Enter project title to search: ");
         String title = scanner.nextLine();
-        try {
-            List<Project> projects = controller.getAllProjects();
-            List<Project> results = searcher.searchByTitle(projects, title);
-            if (results.isEmpty()) {
-                System.out.println("No projects found with the title containing: " + title);
-            } else {
-                results.forEach(System.out::println);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        List<Project> projects = controller.getAllProjects();
+        List<Project> results = searcher.searchByTitle(projects, title);
+        if (results.isEmpty()) {
+            System.out.println("No projects found with the title containing: " + title);
+        } else {
+            results.forEach(System.out::println);
         }
     }
 
@@ -421,29 +349,25 @@ public class ConsoleClient {
 
         int sortOption = scanner.nextInt();
         scanner.nextLine();
-        try {
-            List<Project> projects = controller.getAllProjects();
-            switch (sortOption) {
-                case 1:
-                    Sorting.sortByTitle(projects);
-                    System.out.println("Projects sorted by title:");
-                    break;
-                case 2:
-                    Sorting.sortByCost(projects);
-                    System.out.println("Projects sorted by cost:");
-                    break;
-                case 3:
-                    Sorting.sortByDate(projects);
-                    System.out.println("Projects sorted by date:");
-                    break;
-                default:
-                    System.out.println("Invalid sort option.");
-                    return;
-            }
-            projects.forEach(System.out::println);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        List<Project> projects = controller.getAllProjects();
+        switch (sortOption) {
+            case 1:
+                Sorting.sortByTitle(projects);
+                System.out.println("Projects sorted by title:");
+                break;
+            case 2:
+                Sorting.sortByCost(projects);
+                System.out.println("Projects sorted by cost:");
+                break;
+            case 3:
+                Sorting.sortByDate(projects);
+                System.out.println("Projects sorted by date:");
+                break;
+            default:
+                System.out.println("Invalid sort option.");
+                return;
         }
+        projects.forEach(System.out::println);
     }
 
     private void assignStaffToProject(Scanner scanner) throws SQLException {

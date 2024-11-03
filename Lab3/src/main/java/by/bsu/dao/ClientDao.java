@@ -1,17 +1,21 @@
 package by.bsu.dao;
 
 import by.bsu.metamodel.Client_;
+import by.bsu.entity.Client;
+import by.bsu.exceptions.DaoException;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
-import by.bsu.entity.Client;
 import jakarta.persistence.criteria.CriteriaDelete;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.CriteriaUpdate;
 import jakarta.persistence.criteria.Root;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
 public class ClientDao extends DAO {
+    private static final Logger logger = LogManager.getLogger(ClientDao.class);
 
     public ClientDao() {
         super();
@@ -28,6 +32,8 @@ public class ClientDao extends DAO {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
             }
+            logger.error("Failed to add client", e);
+            throw new DaoException(e.getMessage());
         }
     }
 
@@ -49,7 +55,8 @@ public class ClientDao extends DAO {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
-            e.printStackTrace();
+            logger.error("Failed to update client", e);
+            throw new DaoException(e.getMessage());
         }
     }
 
@@ -66,24 +73,34 @@ public class ClientDao extends DAO {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
-            e.printStackTrace();
+            logger.error("Failed to delete client", e);
+            throw new DaoException(e.getMessage());
         }
     }
 
     public Client getClientById(Long id) {
-        CriteriaQuery<Client> query = criteriaBuilder.createQuery(Client.class);
-        Root<Client> root = query.from(Client.class);
-        query.select(root).where(criteriaBuilder.equal(root.get(Client_.id), id));
+        try {
+            CriteriaQuery<Client> query = criteriaBuilder.createQuery(Client.class);
+            Root<Client> root = query.from(Client.class);
+            query.select(root).where(criteriaBuilder.equal(root.get(Client_.id), id));
 
-        return entityManager.createQuery(query).getSingleResult();
+            return entityManager.createQuery(query).getSingleResult();
+        } catch (Exception e) {
+            logger.error("Failed to retrieve client", e);
+            throw new DaoException(e.getMessage());
+        }
     }
 
     public List<Client> getAllClients() {
-        CriteriaQuery<Client> query = criteriaBuilder.createQuery(Client.class);
-        Root<Client> root = query.from(Client.class);
-        query.select(root);
+        try {
+            CriteriaQuery<Client> query = criteriaBuilder.createQuery(Client.class);
+            Root<Client> root = query.from(Client.class);
+            query.select(root);
 
-        return entityManager.createQuery(query).getResultList();
+            return entityManager.createQuery(query).getResultList();
+        } catch (Exception e) {
+            logger.error("Failed to retrieve all clients", e);
+            throw new DaoException(e.getMessage());
+        }
     }
-
 }

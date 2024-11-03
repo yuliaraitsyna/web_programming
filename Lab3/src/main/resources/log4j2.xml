@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <File name="ClientDaoFile" fileName="logs/client_dao.log" append="true">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
+        <File name="TechnicalTaskDaoFile" fileName="logs/technical_task_dao.log" append="true">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
+        <File name="ProjectDaoFile" fileName="logs/project_dao.log" append="true">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
+        <File name="StaffDaoFile" fileName="logs/staff_dao.log" append="true">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
+        <File name="MainFile" fileName="logs/main.log" append="true">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="by.bsu.dao.ClientDao" level="error" additivity="false">
+            <AppenderRef ref="ClientDaoFile"/>
+        </Logger>
+        <Logger name="by.bsu.dao.TechnicalTaskDao" level="error" additivity="false">
+            <AppenderRef ref="TechnicalTaskDaoFile"/>
+        </Logger>
+        <Logger name="by.bsu.dao.ProjectDao" level="error" additivity="false">
+            <AppenderRef ref="ProjectDaoFile"/>
+        </Logger>
+        <Logger name="by.bsu.dao.StaffDao" level="error" additivity="false">
+            <AppenderRef ref="StaffDaoFile"/>
+        </Logger>
+        <Root level="SEVERE">
+            <AppenderRef ref="MainFile"/>
+        </Root>
+    </Loggers>
+</Configuration>

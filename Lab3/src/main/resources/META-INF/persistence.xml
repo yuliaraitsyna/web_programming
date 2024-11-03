@@ -7,8 +7,10 @@
     <persistence-unit name="Lab3PU">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <class>main.java.com.example.entity.Client</class>
+        <class>main.java.com.example.entity.Project</class>
+        <class>main.java.com.example.entity.Staff</class>
+        <class>main.java.com.example.entity.TechnicalTask</class>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
-
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
             <property name="jakarta.persistence.jdbc.url" value="jdbc:sqlserver://localhost:1433;databaseName=DesignOffice;encrypt=false;trustServerCertificate=true;"/>

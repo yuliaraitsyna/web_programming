@@ -8,108 +8,212 @@ import by.bsu.entity.Client;
 import by.bsu.entity.Project;
 import by.bsu.entity.Staff;
 import by.bsu.entity.TechnicalTask;
+import by.bsu.exceptions.DaoException;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Controller implements AutoCloseable {
+
+    private static final Logger logger = Logger.getLogger(Controller.class.getName());
 
     private ClientDao clientDao;
     private StaffDao staffDao;
     private ProjectDao projectDao;
     private TechnicalTaskDao technicalTaskDao;
 
-    public Controller() throws SQLException, IOException {
+    public Controller() throws DaoException {
         clientDao = new ClientDao();
         staffDao = new StaffDao();
         projectDao = new ProjectDao();
         technicalTaskDao = new TechnicalTaskDao();
     }
 
-    public void addClient(Client client) throws SQLException {
-        clientDao.addClient(client);
+    public void addClient(Client client) {
+        try {
+            clientDao.addClient(client);
+            logger.info("Client added successfully: " + client);
+        } catch (DaoException e) {
+            logger.log(Level.SEVERE, "Failed to add client: " + e.getMessage(), e);
+        }
     }
 
-    public void updateClient(Long id, Client client) throws SQLException {
-        clientDao.updateClient(id, client);
+    public void updateClient(Long id, Client client) {
+        try {
+            clientDao.updateClient(id, client);
+            logger.info("Client updated successfully with ID " + id);
+        } catch (DaoException e) {
+            logger.log(Level.SEVERE, "Failed to update client with ID " + id + ": " + e.getMessage(), e);
+        }
     }
 
-    public void deleteClient(Long id) throws SQLException {
-        clientDao.deleteClient(id);
+    public void deleteClient(Long id) {
+        try {
+            clientDao.deleteClient(id);
+            logger.info("Client deleted successfully with ID " + id);
+        } catch (DaoException e) {
+            logger.log(Level.SEVERE, "Failed to delete client with ID " + id + ": " + e.getMessage(), e);
+        }
     }
 
-    public List<Client> getAllClients() throws SQLException {
-        return clientDao.getAllClients();
+    public List<Client> getAllClients() {
+        try {
+            return clientDao.getAllClients();
+        } catch (DaoException e) {
+            logger.log(Level.SEVERE, "Failed to retrieve clients: " + e.getMessage(), e);
+            return List.of();
+        }
     }
 
-    public Client getClientById(Long id) throws SQLException {
-        return clientDao.getClientById(id);
+    public Client getClientById(Long id) {
+        try {
+            return clientDao.getClientById(id);
+        } catch (DaoException e) {
+            logger.log(Level.SEVERE, "Failed to retrieve client with ID " + id + ": " + e.getMessage(), e);
+            return null;
+        }
     }
 
-    public void addProject(Project project) throws SQLException {
-        projectDao.addProject(project);
+    public void addProject(Project project) {
+        try {
+            projectDao.addProject(project);
+            logger.info("Project added successfully: " + project);
+        } catch (DaoException e) {
+            logger.log(Level.SEVERE, "Failed to add project: " + e.getMessage(), e);
+        }
     }
 
-    public void updateProject(Long id, Project project) throws SQLException {
-        projectDao.updateProject(id, project);
+    public void updateProject(Long id, Project project) {
+        try {
+            projectDao.updateProject(id, project);
+            logger.info("Project updated successfully with ID " + id);
+        } catch (DaoException e) {
+            logger.log(Level.SEVERE, "Failed to update project with ID " + id + ": " + e.getMessage(), e);
+        }
     }
 
-    public void deleteProject(Long id) throws SQLException {
-        projectDao.deleteProject(id);
+    public void deleteProject(Long id) {
+        try {
+            projectDao.deleteProject(id);
+            logger.info("Project deleted successfully with ID " + id);
+        } catch (DaoException e) {
+            logger.log(Level.SEVERE, "Failed to delete project with ID " + id + ": " + e.getMessage(), e);
+        }
     }
 
-    public List<Project> getAllProjects() throws SQLException {
-        return projectDao.getAllProjects();
+    public List<Project> getAllProjects() {
+        try {
+            return projectDao.getAllProjects();
+        } catch (DaoException e) {
+            logger.log(Level.SEVERE, "Failed to retrieve projects: " + e.getMessage(), e);
+            return List.of();
+        }
     }
 
-    public Project getProjectById(Long id) throws SQLException {
-        return projectDao.getProjectById(id);
+    public Project getProjectById(Long id) {
+        try {
+            return projectDao.getProjectById(id);
+        } catch (DaoException e) {
+            logger.log(Level.SEVERE, "Failed to retrieve project with ID " + id + ": " + e.getMessage(), e);
+            return null;
+        }
     }
 
-    public void addTechnicalTask(TechnicalTask task) throws SQLException {
-        technicalTaskDao.addTechnicalTask(task);
+    public void addTechnicalTask(TechnicalTask task) {
+        try {
+            technicalTaskDao.addTechnicalTask(task);
+            logger.info("Technical task added successfully: " + task);
+        } catch (DaoException e) {
+            logger.log(Level.SEVERE, "Failed to add technical task: " + e.getMessage(), e);
+        }
     }
 
-    public void updateTechnicalTask(Long id, TechnicalTask task) throws SQLException {
-        technicalTaskDao.updateTechnicalTask(id, task);
+    public void updateTechnicalTask(Long id, TechnicalTask task) {
+        try {
+            technicalTaskDao.updateTechnicalTask(id, task);
+            logger.info("Technical task updated successfully with ID " + id);
+        } catch (DaoException e) {
+            logger.log(Level.SEVERE, "Failed to update technical task with ID " + id + ": " + e.getMessage(), e);
+        }
     }
 
-    public void deleteTechnicalTask(Long id) throws SQLException {
-        technicalTaskDao.deleteTechnicalTask(id);
+    public void deleteTechnicalTask(Long id) {
+        try {
+            technicalTaskDao.deleteTechnicalTask(id);
+            logger.info("Technical task deleted successfully with ID " + id);
+        } catch (DaoException e) {
+            logger.log(Level.SEVERE, "Failed to delete technical task with ID " + id + ": " + e.getMessage(), e);
+        }
     }
 
-    public List<TechnicalTask> getAllTechnicalTasks() throws SQLException {
-        return technicalTaskDao.getAllTechnicalTasks();
+    public List<TechnicalTask> getAllTechnicalTasks() {
+        try {
+            return technicalTaskDao.getAllTechnicalTasks();
+        } catch (DaoException e) {
+            logger.log(Level.SEVERE, "Failed to retrieve technical tasks: " + e.getMessage(), e);
+            return List.of();
+        }
     }
 
-    public TechnicalTask getTechnicalTaskById(Long id) throws SQLException {
-        return technicalTaskDao.getTechnicalTaskById(id);
+    public TechnicalTask getTechnicalTaskById(Long id) {
+        try {
+            return technicalTaskDao.getTechnicalTaskById(id);
+        } catch (DaoException e) {
+            logger.log(Level.SEVERE, "Failed to retrieve technical task with ID " + id + ": " + e.getMessage(), e);
+            return null;
+        }
     }
 
-    public void addStaff(Staff staff) throws SQLException {
-        staffDao.addStaff(staff);
+    public void addStaff(Staff staff) {
+        try {
+            staffDao.addStaff(staff);
+            logger.info("Staff added successfully: " + staff);
+        } catch (DaoException e) {
+            logger.log(Level.SEVERE, "Failed to add staff: " + e.getMessage(), e);
+        }
     }
 
-    public void updateStaff(Long id, Staff staff) throws SQLException {
-        staffDao.updateStaff(id, staff);
+    public void updateStaff(Long id, Staff staff) {
+        try {
+            staffDao.updateStaff(id, staff);
+            logger.info("Staff updated successfully with ID " + id);
+        } catch (DaoException e) {
+            logger.log(Level.SEVERE, "Failed to update staff with ID " + id + ": " + e.getMessage(), e);
+        }
     }
 
-    public void deleteStaff(Long id) throws SQLException {
-        staffDao.deleteStaff(id);
+    public void deleteStaff(Long id) {
+        try {
+            staffDao.deleteStaff(id);
+            logger.info("Staff deleted successfully with ID " + id);
+        } catch (DaoException e) {
+            logger.log(Level.SEVERE, "Failed to delete staff with ID " + id + ": " + e.getMessage(), e);
+        }
     }
 
-    public List<Staff> getAllStaff() throws SQLException {
-        return staffDao.getAllStaff();
+    public List<Staff> getAllStaff() {
+        try {
+            return staffDao.getAllStaff();
+        } catch (DaoException e) {
+            logger.log(Level.SEVERE, "Failed to retrieve staff: " + e.getMessage(), e);
+            return List.of();
+        }
     }
 
-    public Staff getStaffById(Long id) throws SQLException {
-        return staffDao.getStaffById(id);
+    public Staff getStaffById(Long id) {
+        try {
+            return staffDao.getStaffById(id);
+        } catch (DaoException e) {
+            logger.log(Level.SEVERE, "Failed to retrieve staff with ID " + id + ": " + e.getMessage(), e);
+            return null;
+        }
     }
 
     @Override
-    public void close() throws SQLException {
+    public void close() throws SQLException, DaoException {
         if (clientDao != null) clientDao.close();
         if (staffDao != null) staffDao.close();
         if (projectDao != null) projectDao.close();
@@ -131,7 +235,7 @@ public class Controller implements AutoCloseable {
             }
 
             if (number > 0) {
-                System.out.println("Not enough staff with " + qualification + " qualification for task: " + task.getDescription());
+                logger.log(Level.WARNING, "Not enough staff with " + qualification + " qualification for task: " + task.getDescription());
             }
         }
     }

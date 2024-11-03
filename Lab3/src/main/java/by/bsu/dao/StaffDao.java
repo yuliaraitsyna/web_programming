@@ -2,23 +2,22 @@ package by.bsu.dao;
 
 import by.bsu.metamodel.Staff_;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.TypedQuery;
 import by.bsu.entity.Staff;
-import by.bsu.factory.BaseFactory;
-import by.bsu.factory.Factory;
 import jakarta.persistence.criteria.CriteriaDelete;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.CriteriaUpdate;
 import jakarta.persistence.criteria.Root;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import by.bsu.exceptions.DaoException;
 
 import java.util.List;
 
 public class StaffDao extends DAO {
-    private BaseFactory factory;
+    private static final Logger logger = LogManager.getLogger(StaffDao.class);
 
     public StaffDao() {
         super();
-        this.factory = new Factory();
     }
 
     public void addStaff(Staff staff) {
@@ -32,7 +31,8 @@ public class StaffDao extends DAO {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
             }
-            e.printStackTrace();
+            logger.error("Failed to add staff: " + e.getMessage(), e);
+            throw new DaoException(e.getMessage());
         }
     }
 
@@ -56,7 +56,8 @@ public class StaffDao extends DAO {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
-            e.printStackTrace();
+            logger.error("Failed to update staff: " + e.getMessage(), e);
+            throw new DaoException(e.getMessage());
         }
     }
 
@@ -67,30 +68,38 @@ public class StaffDao extends DAO {
             CriteriaDelete<Staff> delete = criteriaBuilder.createCriteriaDelete(Staff.class);
             Root<Staff> root = delete.from(Staff.class);
             delete.where(criteriaBuilder.equal(root.get(Staff_.id), id));
-
             entityManager.createQuery(delete).executeUpdate();
             transaction.commit();
         } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
-            e.printStackTrace();
+            logger.error("Failed to delete staff: " + e.getMessage(), e);
+            throw new DaoException(e.getMessage());
         }
     }
 
     public Staff getStaffById(Long id) {
-        CriteriaQuery<Staff> query = criteriaBuilder.createQuery(Staff.class);
-        Root<Staff> root = query.from(Staff.class);
-        query.select(root).where(criteriaBuilder.equal(root.get(Staff_.id), id));
-
-        return entityManager.createQuery(query).getSingleResult();
+        try {
+            CriteriaQuery<Staff> query = criteriaBuilder.createQuery(Staff.class);
+            Root<Staff> root = query.from(Staff.class);
+            query.select(root).where(criteriaBuilder.equal(root.get(Staff_.id), id));
+            return entityManager.createQuery(query).getSingleResult();
+        } catch (Exception e) {
+            logger.error("Failed to get staff by ID: " + e.getMessage(), e);
+            throw new DaoException(e.getMessage());
+        }
     }
 
     public List<Staff> getAllStaff() {
-        CriteriaQuery<Staff> query = criteriaBuilder.createQuery(Staff.class);
-        Root<Staff> root = query.from(Staff.class);
-        query.select(root);
-
-        return entityManager.createQuery(query).getResultList();
+        try {
+            CriteriaQuery<Staff> query = criteriaBuilder.createQuery(Staff.class);
+            Root<Staff> root = query.from(Staff.class);
+            query.select(root);
+            return entityManager.createQuery(query).getResultList();
+        } catch (Exception e) {
+            logger.error("Failed to get all staff: " + e.getMessage(), e);
+            throw new DaoException(e.getMessage());
+        }
     }
 }
