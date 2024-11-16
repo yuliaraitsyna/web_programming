@@ -15,7 +15,6 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            logger.error("Failed to create controller manager");
             ConsoleClient consoleClient = new ConsoleClient();
             consoleClient.start();
         } catch (SQLException | IOException e) {

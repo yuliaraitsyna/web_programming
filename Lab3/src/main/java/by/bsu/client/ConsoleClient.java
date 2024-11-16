@@ -209,7 +209,7 @@ public class ConsoleClient {
         projects.forEach(project -> System.out.println(project));
     }
 
-    private void addTechnicalTask(Scanner scanner) throws SQLException {
+    private void addTechnicalTask(Scanner scanner) {
         System.out.print("Enter technical task description: ");
         String description = scanner.nextLine();
 
@@ -220,7 +220,7 @@ public class ConsoleClient {
         controller.addTechnicalTask(task);
     }
 
-    private void updateTechnicalTask(Scanner scanner) throws SQLException {
+    private void updateTechnicalTask(Scanner scanner) {
         System.out.print("Enter technical task ID to update: ");
         Long id = scanner.nextLong();
         scanner.nextLine();
