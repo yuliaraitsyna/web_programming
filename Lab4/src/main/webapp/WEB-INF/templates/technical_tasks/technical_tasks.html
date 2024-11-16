@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technical Task Details</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h1>Technical Task Information</h1>
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Description</th>
+        <th>Client</th>
+        <th>Required Staff</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{technicalTask.id}}</td>
+        <td>{{technicalTask.description}}</td>
+        <td>{{technicalTask.client.name}} {{technicalTask.client.surname}}</td>
+        <td>
+            <table border="1">
+                <thead>
+                <tr>
+                    <th>Role</th>
+                    <th>Amount</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for role, amount in technicalTask.requiredStaff.items() %}
+                <tr>
+                    <td>{{role}}</td>
+                    <td>{{amount}}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
