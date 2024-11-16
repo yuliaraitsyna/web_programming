@@ -18,7 +18,7 @@ public class ControllerMapping {
         // Add your controllers for each path
         controllersByURL.put("/client", new ClientController()); // Client page
         controllersByURL.put("/projects", new ProjectController()); // Projects page
-//        controllersByURL.put("/staff", new StaffController()); // Staff page
+        controllersByURL.put("/staff", new StaffController()); // Staff page
 //        controllersByURL.put("/technical_tasks", new TechnicalTaskController()); // Technical Tasks page
     }
 

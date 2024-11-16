@@ -1,17 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Staff Information</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Staff List</title>
 </head>
 <body>
-<h1>Staff Information</h1>
+<h1>Staff Members</h1>
 <table border="1">
     <thead>
     <tr>
-        <th>ID</th>
         <th>Name</th>
         <th>Surname</th>
         <th>Qualification</th>
@@ -20,13 +16,12 @@
     </tr>
     </thead>
     <tbody>
-    <tr>
-        <td>{{staff.id}}</td>
-        <td>{{staff.name}}</td>
-        <td>{{staff.surname}}</td>
-        <td>{{staff.qualification}}</td>
-        <td>{{staff.salary}}</td>
-        <td>{{staff.isBusy ? 'Yes' : 'No'}}</td>
+    <tr th:each="staff : ${staffs}">
+        <td th:text="${staff.name}"></td>
+        <td th:text="${staff.surname}"></td>
+        <td th:text="${staff.qualification}"></td>
+        <td th:text="${staff.salary}"></td>
+        <td th:text="${staff.isBusy}"></td>
     </tr>
     </tbody>
 </table>
