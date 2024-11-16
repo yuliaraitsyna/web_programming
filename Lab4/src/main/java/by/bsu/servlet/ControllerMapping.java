@@ -12,14 +12,11 @@ public class ControllerMapping {
     private static final Map<String, IController> controllersByURL = new HashMap<>();
 
     static {
-        // Home page mapping
         controllersByURL.put("/", new HomeController());
-
-        // Add your controllers for each path
-        controllersByURL.put("/client", new ClientController()); // Client page
-        controllersByURL.put("/projects", new ProjectController()); // Projects page
-        controllersByURL.put("/staff", new StaffController()); // Staff page
-//        controllersByURL.put("/technical_tasks", new TechnicalTaskController()); // Technical Tasks page
+        controllersByURL.put("/client", new ClientController());
+        controllersByURL.put("/projects", new ProjectController());
+        controllersByURL.put("/staff", new StaffController());
+        controllersByURL.put("/technical_tasks", new TechnicalTaskController());
     }
 
     public static IController resolveControllerForRequest(final IWebRequest request) {

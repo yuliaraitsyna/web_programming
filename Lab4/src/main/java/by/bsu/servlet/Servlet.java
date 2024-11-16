@@ -29,7 +29,6 @@ public class Servlet extends HttpServlet {
 
     @Override
     public void init() {
-        System.out.println("Servlet initialized!");
         this.application = JakartaServletWebApplication.buildApplication(getServletContext());
         this.templateEngine = buildTemplateEngine(this.application);
     }
