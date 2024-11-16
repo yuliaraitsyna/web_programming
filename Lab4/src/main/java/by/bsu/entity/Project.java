@@ -31,7 +31,8 @@ public class Project {
 
     }
 
-    public Project(String title, Date date) {
+    public Project(Long id, String title, Date date) {
+        this.id = id;
         this.title = title;
         this.date = date;
         this.cost = 0;
