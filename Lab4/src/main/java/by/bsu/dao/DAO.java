@@ -18,10 +18,4 @@ public abstract class DAO {
             System.out.print("Failed to create EntityManager");
         }
     }
-
-    public void close() {
-        if (entityManager != null && entityManager.isOpen()) {
-            entityManager.close();
-        }
-    }
 }
