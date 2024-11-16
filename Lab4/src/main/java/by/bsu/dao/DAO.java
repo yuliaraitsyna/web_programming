@@ -11,7 +11,7 @@ public abstract class DAO {
 
     public DAO() {
         try {
-            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("Lab3PU");
+            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("Lab4PU");
             this.entityManager = entityManagerFactory.createEntityManager();
             this.criteriaBuilder = entityManager.getCriteriaBuilder();
         } catch (Exception e) {

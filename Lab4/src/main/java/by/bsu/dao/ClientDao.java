@@ -16,10 +16,10 @@ public class ClientDao extends DAO {
             CriteriaQuery<Client> query = criteriaBuilder.createQuery(Client.class);
             Root<Client> root = query.from(Client.class);
             query.select(root);
-
+            System.out.print(entityManager.createQuery(query).getResultList());
             return entityManager.createQuery(query).getResultList();
         } catch (Exception e) {
-           System.out.print("Failed while gettting list of Clients");
+           System.out.print(e.getMessage());
         }
         return List.of();
     }
