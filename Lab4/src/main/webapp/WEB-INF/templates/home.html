@@ -1,14 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
     <h1>Homepage</h1>
-    <li><a href="/Lab4/client">Client</a></li>
-    <li><a href="/Lab4/projects">Projects</a></li>
-    <li><a href="/Lab4/staff">Staff</a></li>
-    <li><a href="/Lab4/technical_tasks">Technical Tasks</a></li>
+    <p>Last visit: <span th:text="${lastVisit}"></span></p>
+    <p>Visit count: <span th:text="${visitCount}"></span></p>
+    <li><a href="/client">Client</a></li>
+    <li><a href="/projects">Projects</a></li>
+    <li><a href="/staff">Staff</a></li>
+    <li><a href="/technical_tasks">Technical Tasks</a></li>
 </body>
 </html>

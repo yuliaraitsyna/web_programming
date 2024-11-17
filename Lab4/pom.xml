@@ -64,7 +64,7 @@
         <version>${jetty-maven-plugin.version}</version>
         <configuration>
           <webApp>
-            <contextPath>/Lab4</contextPath>
+            <contextPath>/</contextPath>
           </webApp>
         </configuration>
       </plugin>

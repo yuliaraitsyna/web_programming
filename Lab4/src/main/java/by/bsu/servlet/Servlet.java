@@ -2,6 +2,8 @@ package by.bsu.servlet;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 
 import by.bsu.controllers.HomeController;
@@ -56,7 +58,51 @@ public class Servlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
+            String uri = request.getRequestURI();
+            System.out.println("Request URI: " + uri);
+
+            if ("/css/gtvg.css".equals(uri)) {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                return;
+            }
+
+            String formattedDate = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
             request.getSession().setAttribute("calendar", Calendar.getInstance());
+
+            jakarta.servlet.http.Cookie[] cookies = request.getCookies();
+            String lastVisit = "First visit";
+            int visitCount = 0;
+
+            if (cookies != null) {
+                for (jakarta.servlet.http.Cookie cookie : cookies) {
+                    System.out.println("Cookie Name: " + cookie.getName() + ", Value: " + cookie.getValue());
+                }
+
+                for (jakarta.servlet.http.Cookie cookie : cookies) {
+                    if ("lastVisit".equals(cookie.getName())) {
+                        lastVisit = cookie.getValue();
+                    }
+                    if ("visitCount".equals(cookie.getName())) {
+                        visitCount = Integer.parseInt(cookie.getValue());
+                    }
+                }
+            }
+
+            request.setAttribute("lastVisit", lastVisit);
+            request.setAttribute("visitCount", visitCount);
+
+            visitCount++;
+            jakarta.servlet.http.Cookie lastVisitCookie = new jakarta.servlet.http.Cookie("lastVisit", formattedDate);
+            jakarta.servlet.http.Cookie visitCountCookie = new jakarta.servlet.http.Cookie("visitCount", String.valueOf(visitCount));
+
+            lastVisitCookie.setMaxAge(60 * 60 * 24 * 30);
+            visitCountCookie.setMaxAge(60 * 60 * 24 * 30);
+
+            lastVisitCookie.setPath("/");
+            visitCountCookie.setPath("/");
+
+            response.addCookie(lastVisitCookie);
+            response.addCookie(visitCountCookie);
 
             final IServletWebExchange webExchange = this.application.buildExchange(request, response);
             final IWebRequest webRequest = webExchange.getRequest();
@@ -64,7 +110,7 @@ public class Servlet extends HttpServlet {
 
             IController controller = ControllerMapping.resolveControllerForRequest(webRequest);
             if (controller == null) {
-                controller = new HomeController(); // Default to HomeController if no match
+                controller = new HomeController();
             }
 
             response.setContentType("text/html;charset=UTF-8");
@@ -82,4 +128,5 @@ public class Servlet extends HttpServlet {
             throw new ServletException(e);
         }
     }
+
 }
