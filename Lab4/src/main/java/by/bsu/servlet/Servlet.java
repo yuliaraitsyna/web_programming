@@ -1,6 +1,8 @@
 package by.bsu.servlet;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Writer;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
@@ -61,8 +63,13 @@ public class Servlet extends HttpServlet {
             String uri = request.getRequestURI();
             System.out.println("Request URI: " + uri);
 
-            if ("/css/gtvg.css".equals(uri)) {
-                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+//            if ("/css/gtvg.css".equals(uri)) {
+//                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+//                return;
+//            }
+
+            if (uri.startsWith("/css/")) {
+                serveStaticResource(uri, response);
                 return;
             }
 
@@ -74,10 +81,6 @@ public class Servlet extends HttpServlet {
             int visitCount = 0;
 
             if (cookies != null) {
-                for (jakarta.servlet.http.Cookie cookie : cookies) {
-                    System.out.println("Cookie Name: " + cookie.getName() + ", Value: " + cookie.getValue());
-                }
-
                 for (jakarta.servlet.http.Cookie cookie : cookies) {
                     if ("lastVisit".equals(cookie.getName())) {
                         lastVisit = cookie.getValue();
@@ -95,8 +98,8 @@ public class Servlet extends HttpServlet {
             jakarta.servlet.http.Cookie lastVisitCookie = new jakarta.servlet.http.Cookie("lastVisit", formattedDate);
             jakarta.servlet.http.Cookie visitCountCookie = new jakarta.servlet.http.Cookie("visitCount", String.valueOf(visitCount));
 
-            lastVisitCookie.setMaxAge(60 * 60 * 24 * 30);
-            visitCountCookie.setMaxAge(60 * 60 * 24 * 30);
+            lastVisitCookie.setMaxAge(60 * 60);
+            visitCountCookie.setMaxAge(60 * 60);
 
             lastVisitCookie.setPath("/");
             visitCountCookie.setPath("/");
@@ -127,6 +130,25 @@ public class Servlet extends HttpServlet {
             }
             throw new ServletException(e);
         }
+    }
+
+    private void serveStaticResource(String uri, HttpServletResponse response) throws IOException {
+        String resourcePath = uri.substring(1); // Remove leading slash
+        InputStream resourceStream = getServletContext().getResourceAsStream("/" + resourcePath);
+
+        if (resourceStream == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
+        // Detect content type (e.g., CSS, JS, images)
+        String mimeType = getServletContext().getMimeType(resourcePath);
+        response.setContentType(mimeType != null ? mimeType : "application/octet-stream");
+
+        // Write resource to response
+        OutputStream out = response.getOutputStream();
+        resourceStream.transferTo(out);
+        out.close();
     }
 
 }
