@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Technical Tasks</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/table.css}">
+</head>
+<body>
+<h1>Technical Tasks</h1>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Description</th>
+        <th>Client</th>
+        <th>Required Staff Role</th>
+        <th>Quantity</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="task : ${technicalTasks}">
+        <td th:text="${task.description}"></td>
+        <td th:text="${task.client.name} + ' ' + ${task.client.surname}"></td>
+        <td>
+            <div th:each="entry : ${task.requiredStaff}">
+                <span th:text="${entry.key}">Role</span>
+            </div>
+        </td>
+        <td>
+            <div th:each="entry : ${task.requiredStaff}">
+                <span th:text="${entry.value}">Quantity</span>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
