@@ -14,6 +14,7 @@ public class ControllerMapping {
     static {
         controllersByURL.put("/", new HomeController());
         controllersByURL.put("/client", new ClientController());
+        controllersByURL.put("/add-client", new ClientController());
         controllersByURL.put("/projects", new ProjectController());
         controllersByURL.put("/staff", new StaffController());
         controllersByURL.put("/technical_tasks", new TechnicalTaskController());

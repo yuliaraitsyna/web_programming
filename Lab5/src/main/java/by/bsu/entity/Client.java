@@ -26,6 +26,11 @@ public class Client {
         this.surname = surname;
     }
 
+    public Client(String name, String surname) {
+        this.name = name;
+        this.surname = surname;
+    }
+
     public Long getId() {
         return id;
     }

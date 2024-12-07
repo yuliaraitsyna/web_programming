@@ -6,6 +6,9 @@
 </head>
 <body>
 <h1>List of Clients</h1>
+<a th:if="${role == 'ADMIN'}" href="/add-client">Add client</a>
+<p>Role: <span th:text="${role}"></span></p>
+
 <table border="1">
     <thead>
     <tr>
