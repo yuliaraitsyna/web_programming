@@ -12,10 +12,10 @@
     <aside>
         <nav>
             <ul>
-                <li><a href="/client">Client list</a></li>
-                <li><a href="/projects">Projects list</a></li>
-                <li><a href="/staff">Staff list</a></li>
-                <li><a href="/technical_tasks">Technical Tasks list</a></li>
+                <li th:if="${role == 'ADMIN' or role == 'USER'}"><a href="/client">Client list</a></li>
+                <li th:if="${role == 'ADMIN' or role == 'USER'}"><a href="/projects">Projects list</a></li>
+                <li th:if="${role == 'ADMIN' or role == 'USER'}"><a href="/staff">Staff list</a></li>
+                <li th:if="${role == 'ADMIN' or role == 'USER'}"><a href="/technical_tasks">Technical Tasks list</a></li>
             </ul>
         </nav>
     </aside>
@@ -27,6 +27,15 @@
         </p>
         <p class="info">Last visit: <span th:text="${lastVisit}"></span></p>
         <p class="info">Visit count: <span th:text="${visitCount}"></span></p>
+
+        <ul>
+            <li th:if="${role == 'GUEST'}">
+                <a href="/login">Login</a>
+            </li>
+            <li th:if="${role == 'ADMIN' || role == 'USER'}">
+                <a href="/logout">Logout</a>
+            </li>
+        </ul>
     </main>
 </body>
 </html>

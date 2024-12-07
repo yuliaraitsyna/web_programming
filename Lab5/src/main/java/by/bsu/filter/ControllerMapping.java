@@ -17,7 +17,10 @@ public class ControllerMapping {
         controllersByURL.put("/projects", new ProjectController());
         controllersByURL.put("/staff", new StaffController());
         controllersByURL.put("/technical_tasks", new TechnicalTaskController());
+        controllersByURL.put("/login", new LoginController());
+        controllersByURL.put("/logout", new LogoutController());
     }
+
 
     public static IController resolveControllerForRequest(final IWebRequest request) {
         final String path = request.getPathWithinApplication();

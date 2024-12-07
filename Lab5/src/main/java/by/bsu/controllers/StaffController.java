@@ -2,6 +2,8 @@ package by.bsu.controllers;
 
 import by.bsu.dao.StaffDao;
 import by.bsu.entity.Staff;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.thymeleaf.ITemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.web.IWebExchange;
@@ -17,7 +19,7 @@ public class StaffController implements IController {
     }
 
     @Override
-    public void process(IWebExchange exchange, ITemplateEngine templateEngine, Writer writer) {
+    public void process(IWebExchange exchange, ITemplateEngine templateEngine, Writer writer, final HttpServletRequest request, final HttpServletResponse response) {
         try {
             List<Staff> staff = staffDao.getAllStaff();
 

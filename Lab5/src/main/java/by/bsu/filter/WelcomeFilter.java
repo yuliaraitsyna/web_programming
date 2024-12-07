@@ -6,8 +6,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
-import by.bsu.controllers.HomeController;
-import by.bsu.controllers.IController;
 import org.thymeleaf.ITemplateEngine;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.messageresolver.IMessageResolver;
@@ -19,6 +17,9 @@ import org.thymeleaf.web.IWebRequest;
 import org.thymeleaf.web.servlet.IServletWebExchange;
 import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
+import by.bsu.controllers.HomeController;
+import by.bsu.controllers.IController;
+import by.bsu.entity.User;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
@@ -44,6 +45,7 @@ public class WelcomeFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
+
         if (!process((HttpServletRequest) request, (HttpServletResponse) response)) {
             chain.doFilter(request, response);
         }
@@ -101,6 +103,14 @@ public class WelcomeFilter implements Filter {
             response.addCookie(lastVisitCookie);
             response.addCookie(visitCountCookie);
 
+            if (request.getSession().getAttribute("user") == null) {
+                User guestUser = new User();
+                guestUser.setUsername("guest");
+                guestUser.setAccessLevel("GUEST");
+
+                request.getSession().setAttribute("user", guestUser);
+            }
+
             final IServletWebExchange webExchange = this.application.buildExchange(request, response);
             final IWebRequest webRequest = webExchange.getRequest();
             if (webRequest.getPathWithinApplication().startsWith("/css")
@@ -110,6 +120,7 @@ public class WelcomeFilter implements Filter {
             }
 
             IController controller = ControllerMapping.resolveControllerForRequest(webRequest);
+
             if (controller == null) {
                 controller = new HomeController();
                 return false;
@@ -122,7 +133,7 @@ public class WelcomeFilter implements Filter {
             response.setDateHeader("Expires", 0);
 
             final Writer writer = response.getWriter();
-            controller.process(webExchange, templateEngine, writer);
+            controller.process(webExchange, templateEngine, writer, request, response);
             return true;
 
         } catch (Exception e) {

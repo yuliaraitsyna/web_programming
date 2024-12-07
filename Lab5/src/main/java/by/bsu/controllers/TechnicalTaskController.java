@@ -4,6 +4,8 @@ import by.bsu.dao.StaffDao;
 import by.bsu.dao.TechnicalTaskDao;
 import by.bsu.entity.Staff;
 import by.bsu.entity.TechnicalTask;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.thymeleaf.ITemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.web.IWebExchange;
@@ -19,7 +21,7 @@ public class TechnicalTaskController implements IController {
     }
 
     @Override
-    public void process(IWebExchange exchange, ITemplateEngine templateEngine, Writer writer) {
+    public void process(IWebExchange exchange, ITemplateEngine templateEngine, Writer writer, final HttpServletRequest request, final HttpServletResponse response) {
         try {
             List<TechnicalTask> technicalTasks = technicalTaskDao.getAllTechnicalTasks();
 
