@@ -17,6 +17,8 @@ public class HomeController implements IController {
 
         User user = (User) request.getSession(true).getAttribute("user");
 
+        context.setVariable("username", user.getUsername());
+
         if(!user.getAccessLevel().equals("GUEST")) {
             context.setVariable("username", user.getUsername());
         } else {

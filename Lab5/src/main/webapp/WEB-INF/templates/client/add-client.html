@@ -2,10 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Add Client</title>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/form.css}">
 </head>
 <body>
-<h1>Add Client</h1>
 <form th:action="@{/add-client}" method="post">
+  <h1>Add Client</h1>
   <label for="name">Name:</label>
   <input type="text" id="name" name="name" required>
   <br>

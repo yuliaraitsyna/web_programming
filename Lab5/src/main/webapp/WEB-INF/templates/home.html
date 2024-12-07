@@ -20,14 +20,8 @@
         </nav>
     </aside>
     <main>
+        <p>Hello, <span th:text="${username}"></span></p>
         <p>This application was created to demonstrate how servlets work.</p>
-        <p>
-            The app provides you with information about client, technical tasks, projects and staff.
-            Use the side menu to navigate through the website.
-        </p>
-        <p class="info">Last visit: <span th:text="${lastVisit}"></span></p>
-        <p class="info">Visit count: <span th:text="${visitCount}"></span></p>
-
         <ul>
             <li th:if="${role == 'GUEST'}">
                 <a href="/login">Login</a>
@@ -36,6 +30,12 @@
                 <a href="/logout">Logout</a>
             </li>
         </ul>
+        <p>
+            The app provides you with information about client, technical tasks, projects and staff.
+            Use the side menu to navigate through the website.
+        </p>
+        <p class="info">Last visit: <span th:text="${lastVisit}"></span></p>
+        <p class="info">Visit count: <span th:text="${visitCount}"></span></p>
     </main>
 </body>
 </html>

@@ -107,8 +107,18 @@ public class WelcomeFilter implements Filter {
                 User guestUser = new User();
                 guestUser.setUsername("guest");
                 guestUser.setAccessLevel("GUEST");
-
                 request.getSession().setAttribute("user", guestUser);
+            }
+
+            final User user = (User) request.getSession().getAttribute("user");
+            final String path = request.getRequestURI();
+            final boolean isGuest = user != null && "GUEST".equals(user.getAccessLevel());
+
+            if (isGuest && (path.startsWith("/client") || path.startsWith("/add-client")
+                    || path.startsWith("/projects") || path.startsWith("/staff")
+                    || path.startsWith("/technical_tasks"))) {
+                response.sendRedirect(request.getContextPath() + "/login");
+                return true;
             }
 
             final IServletWebExchange webExchange = this.application.buildExchange(request, response);
