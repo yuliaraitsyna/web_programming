@@ -1,1 +1,30 @@
-<h1>Hello</h1>
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header>
+    <h1>Homepage</h1>
+</header>
+<aside>
+    <nav>
+        <ul>
+            <li><a th:href="@{/client}">Client List</a></li>
+            <li><a th:href="@{/projects}">Projects List</a></li>
+            <li><a th:href="@{/staff}">Staff List</a></li>
+            <li><a th:href="@{/technical_tasks}">Technical Tasks List</a></li>
+        </ul>
+    </nav>
+</aside>
+<main>
+    <p>
+        The app provides you with information about clients, technical tasks, projects, and staff.
+        Use the side menu to navigate through the website.
+    </p>
+</main>
+</body>
+</html>
