@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/staff")
-public class StaffController {
+public class StaffController implements IController{
     @Autowired
     private StaffRepository staffRepository;
 
     @GetMapping
-    public String listStaff(Model model) {
+    public String list(Model model) {
         model.addAttribute("staffs", staffRepository.findAll());
         return "staff/index";
     }
@@ -29,7 +29,7 @@ public class StaffController {
     }
 
     @PostMapping
-    public String addStaff(@ModelAttribute Staff staff) {
+    public String add(@ModelAttribute Staff staff) {
         staffRepository.save(staff);
         return "redirect:/staff";
     }

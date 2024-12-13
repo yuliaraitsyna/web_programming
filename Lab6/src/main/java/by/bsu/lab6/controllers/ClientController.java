@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/client")
-public class ClientController {
+public class ClientController implements IController{
 
     @Autowired
     private ClientRepository clientRepository;
 
     @GetMapping
-    public String listClients(Model model) {
+    public String list(Model model) {
         model.addAttribute("clients", clientRepository.findAll());
         return "clients/index";
     }
@@ -27,7 +27,7 @@ public class ClientController {
     }
 
     @PostMapping
-    public String addClient(@ModelAttribute Client client) {
+    public String add(@ModelAttribute Client client) {
         clientRepository.save(client);
         return "redirect:/client";
     }

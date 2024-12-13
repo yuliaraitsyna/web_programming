@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/technical_tasks")
-public class TechnicalTaskController {
+public class TechnicalTaskController implements IController {
     @Autowired
     private TechnicalTaskRepository technicalTaskRepository;
 
     @GetMapping
-    public String listTechnicalTasks(Model model) {
+    public String list(Model model) {
         model.addAttribute("tasks", technicalTaskRepository.findAll());
         return "technicalTasks/index";
     }
@@ -31,7 +31,7 @@ public class TechnicalTaskController {
     }
 
     @PostMapping
-    public String addTechnicalTask(@ModelAttribute TechnicalTask technicalTask) {
+    public String add(@ModelAttribute TechnicalTask technicalTask) {
         technicalTaskRepository.save(technicalTask);
         return "redirect:/staff";
     }

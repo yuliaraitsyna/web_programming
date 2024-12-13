@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/projects")
-public class ProjectController {
+public class ProjectController implements IController {
     @Autowired
     private ProjectRepository projectRepository;
 
     @GetMapping
-    public String listProjects(Model model) {
+    public String list(Model model) {
         model.addAttribute("projects", projectRepository.findAll());
         return "projects/index";
     }
@@ -31,7 +31,7 @@ public class ProjectController {
     }
 
     @PostMapping
-    public String addProject(@ModelAttribute Project project) {
+    public String add(@ModelAttribute Project project) {
         projectRepository.save(project);
         return "redirect:/projects";
     }
