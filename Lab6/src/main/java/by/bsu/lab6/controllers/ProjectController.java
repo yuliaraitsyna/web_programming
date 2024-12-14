@@ -1,9 +1,9 @@
 package by.bsu.lab6.controllers;
 
-import by.bsu.lab6.entity.Client;
 import by.bsu.lab6.entity.Project;
 import by.bsu.lab6.repository.ProjectRepository;
 
+import by.bsu.lab6.repository.TechnicalTaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/projects")
+@RequestMapping("/project")
 public class ProjectController implements IController {
     @Autowired
     private ProjectRepository projectRepository;
@@ -33,6 +33,6 @@ public class ProjectController implements IController {
     @PostMapping
     public String add(@ModelAttribute Project project) {
         projectRepository.save(project);
-        return "redirect:/projects";
+        return "redirect:/project";
     }
 }
